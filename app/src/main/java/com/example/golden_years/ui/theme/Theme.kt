@@ -10,17 +10,51 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+//    primary = Purple80,
+//    secondary = PurpleGrey80,
+//    tertiary = Pink80
+
+    primary = CoralRed,
+    onPrimary = Color.Black,
+
+    secondary = SoftCoral,
+    onSecondary = Color.Black,
+
+    tertiary = VerySoftCoral,
+    onTertiary = Color.Black,
+
+    background = Color(0xFF121212),
+    surface = Color(0xFF121212),
+    onBackground = Color.White,
+    onSurface = Color.White
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+//    primary = Purple40,
+//    secondary = PurpleGrey40,
+//    tertiary = Pink40,
+//
+//    background = Color.White,
+//    surface = Color.White,
+//    onBackground = Color.Black,
+//    onSurface = Color.Black
+    primary = CoralRed,
+    onPrimary = Color.White,
+
+    secondary = SoftCoral,
+    onSecondary = Black,
+
+    tertiary = VerySoftCoral,
+    onTertiary = Color.White,
+
+    background = White,
+    surface = White,
+    onBackground = Black,
+    onSurface = Black
+
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -37,7 +71,8 @@ private val LightColorScheme = lightColorScheme(
 fun GoldenyearsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+//    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

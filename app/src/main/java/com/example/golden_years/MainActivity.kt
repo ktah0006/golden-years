@@ -11,6 +11,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -76,6 +77,7 @@ fun BottomNavigationBar() {
         bottomBar = {
             NavigationBar(
                 modifier = Modifier.padding(bottom = 20.dp),
+                containerColor = MaterialTheme.colorScheme.surface
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
@@ -86,6 +88,13 @@ fun BottomNavigationBar() {
                             destination.label) },
                         label = { Text(destination.label) },
                         selected = currentDestination?.route == destination.route,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            indicatorColor = MaterialTheme.colorScheme.tertiary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurface,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurface
+                        ),
                         onClick = {
                             navController.navigate(destination.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
@@ -102,7 +111,7 @@ fun BottomNavigationBar() {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Destinations.HOME.route,
+            startDestination = Destinations.LOGIN.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Destinations.HOME.route) { HomeScreen() }
