@@ -116,7 +116,7 @@ fun BottomNavigationBar() {
         ) {
             composable(Destinations.HOME.route) { HomeScreen() }
             composable(Destinations.LOGIN.route) { LoginScreen() }
-            composable(Destinations.SIGNUP.route) { SignUp() }
+            composable(Destinations.SIGNUP.route) { SignupScreen() }
             composable(Destinations.ADDENTRY.route) { AddEntry() }
             composable(Destinations.REPORT.route) { ReportScreen() }
             composable(Destinations.RECORD.route) { RecordScreen() }
