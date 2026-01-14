@@ -148,7 +148,10 @@ fun AddEntry() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DisplayDatePicker() {
+fun DisplayDatePicker(
+    modifier: Modifier = Modifier,
+    label: String = "Date"
+) {
     val calendar = Calendar.getInstance()
     var recordDate by remember { mutableStateOf("") }
     val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
@@ -168,9 +171,8 @@ fun DisplayDatePicker() {
             value = recordDate,
             onValueChange = {recordDate=it},
             readOnly = true,
-            label = { Text("Date") },
-            modifier = Modifier
-                .fillMaxWidth(),
+            label = { Text(label) },
+            modifier = modifier,
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.CalendarToday,

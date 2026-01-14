@@ -4,11 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -29,6 +31,7 @@ fun SignupScreen() {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmedPassword by remember { mutableStateOf("") }
     Image(
         painter = painterResource(id = R.drawable.logo),
         contentDescription = "logo image",
@@ -43,7 +46,7 @@ fun SignupScreen() {
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
-        Text("Create a New Account",
+        Text("Create an Account",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary
         )
@@ -62,12 +65,28 @@ fun SignupScreen() {
             label = { Text("email") }
         )
 
+        DisplayDatePicker(
+            modifier = Modifier.fillMaxWidth(0.68f),
+            label = "DoB"
+        )
+
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("password") }
         )
 
+        OutlinedTextField(
+            value = confirmedPassword,
+            onValueChange = { confirmedPassword = it },
+            label = { Text("confirm password") }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "must contain at least 8 characters",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
@@ -87,3 +106,4 @@ fun SignupScreen() {
         }
     }
 }
+

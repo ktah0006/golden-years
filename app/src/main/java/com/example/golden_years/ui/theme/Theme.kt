@@ -33,7 +33,7 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = Color.White,
 
     primaryContainer = SoftCoral,
-    surfaceVariant = VerySoftCoral,
+    surfaceVariant = Color(0xFF2A2A2A),
 
     onSurfaceVariant = Black,
     onPrimaryContainer = Black,
@@ -58,13 +58,15 @@ private val LightColorScheme = lightColorScheme(
     tertiary = VerySoftCoral,
     onTertiary = Color.White,
 
-    background = White,
-    surface = White,
+    background = Color.White,
+    surface = Color.White,
     onBackground = Black,
     onSurface = Black,
 
-    primaryContainer = SoftCoral,
+//    primaryContainer = SoftCoral,
+    primaryContainer = Color.White,
     surfaceVariant = VerySoftCoral,
+
 
     onSurfaceVariant = Black,
     onPrimaryContainer = Black,

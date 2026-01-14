@@ -42,6 +42,9 @@ class MainActivity : ComponentActivity() {
 //                    )
 //                }
                 BottomNavigationBar()
+//                SuccessScreen()
+//                ForgotPasswordVerification()
+//                ResetPassword()
             }
         }
     }
@@ -118,8 +121,9 @@ fun BottomNavigationBar() {
             composable(Destinations.LOGIN.route) { LoginScreen() }
             composable(Destinations.SIGNUP.route) { SignupScreen() }
             composable(Destinations.ADDENTRY.route) { AddEntry() }
-            composable(Destinations.REPORT.route) { ReportScreen() }
             composable(Destinations.RECORD.route) { RecordScreen() }
+            composable(Destinations.REPORT.route) { ReportScreen() }
+            composable(Destinations.PROFILE.route) { ProfileScreen() }
         }
     }
 }

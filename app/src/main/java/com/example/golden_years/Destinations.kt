@@ -13,6 +13,7 @@ enum class Destinations(
     LOGIN("login", "Login", Icons.Default.Login),
     SIGNUP("signup", "Signup", Icons.Default.Person),
     ADDENTRY("addEntry", "Add Data", Icons.Default.AddCircle),
+    RECORD("record", "Records", Icons.Default.ListAlt),
     REPORT("report", "Charts", Icons.Default.BarChart),
-    RECORD("record", "Records", Icons.Default.ListAlt)
+    PROFILE("profile", "Profile", Icons.Default.Person)
 }
