@@ -45,6 +45,9 @@ class MainActivity : ComponentActivity() {
 //                SuccessScreen()
 //                ForgotPasswordVerification()
 //                ResetPassword()
+//                LoginScreen()
+//                SignupScreen()
+//                AddEntry()
             }
         }
     }
@@ -114,13 +117,15 @@ fun BottomNavigationBar() {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Destinations.LOGIN.route,
+//            SHOULD DO THIS LATER
+//            startDestination = Destinations.LOGIN.route,
+            startDestination = Destinations.HOME.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Destinations.HOME.route) { HomeScreen() }
-            composable(Destinations.LOGIN.route) { LoginScreen() }
-            composable(Destinations.SIGNUP.route) { SignupScreen() }
-            composable(Destinations.ADDENTRY.route) { AddEntry() }
+//            composable(Destinations.LOGIN.route) { LoginScreen() }
+//            composable(Destinations.SIGNUP.route) { SignupScreen() }
+//            composable(Destinations.ADDENTRY.route) { AddEntry() }
             composable(Destinations.RECORD.route) { RecordScreen() }
             composable(Destinations.REPORT.route) { ReportScreen() }
             composable(Destinations.PROFILE.route) { ProfileScreen() }
