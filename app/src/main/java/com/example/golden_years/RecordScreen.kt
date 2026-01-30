@@ -34,11 +34,11 @@ import androidx.compose.ui.unit.dp
 fun RecordScreen() {
     val allRecords = remember { mutableStateListOf(
         "Date: 01/11/2025\nBP: 120/80\nGlucose: 111\nbefore meal",
-        "Date: 09/11/2025\nBP: 139/70\nGlucose: 100\n<2 hours after meal",
-        "Date: 11/11/2025\nBP: 130/90\nGlucose: 99\n<2 hours after meal",
+        "Date: 09/11/2025\nBP: 139/70\nGlucose: 100\nafter meal",
+        "Date: 11/11/2025\nBP: 130/90\nGlucose: 99\nafter meal",
         "Date: 19/11/2025\nBP: 120/80\nGlucose: 111\nbefore meal",
-        "Date: 11/12/2025\nBP: 120/80\nGlucose: 111\n>2 hours after meal",
-        "Date: 01/01/2026\nBP: 139/70\nGlucose: 100\n<2 hours after meal",
+        "Date: 11/12/2025\nBP: 120/80\nGlucose: 111\nafter meal",
+        "Date: 01/01/2026\nBP: 139/70\nGlucose: 100\nafter meal",
         "Date: 03/01/2026\nBP: 130/90\nGlucose: 99\nbefore meal")}
 
     Column( modifier = Modifier

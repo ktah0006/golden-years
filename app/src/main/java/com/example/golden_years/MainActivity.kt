@@ -41,13 +41,13 @@ class MainActivity : ComponentActivity() {
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
 //                }
-                BottomNavigationBar()
+//                BottomNavigationBar()
 //                SuccessScreen()
 //                ForgotPasswordVerification()
 //                ResetPassword()
 //                LoginScreen()
 //                SignupScreen()
-//                AddEntry()
+                AddEntry()
             }
         }
     }

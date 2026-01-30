@@ -83,7 +83,7 @@ fun ResetPassword() {
                     onClick = {},
                     modifier = Modifier.fillMaxWidth(0.7f)
                 ) {
-                    Text("Sign up")
+                    Text("Create new password")
                 }
             }
         }

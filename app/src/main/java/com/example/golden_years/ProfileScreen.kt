@@ -66,6 +66,13 @@ fun ProfileScreen() {
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+
+                Spacer(modifier = Modifier.weight(0.01f))
+                Text(
+                    "DoB: 11/01/03",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
 //            }
 
             Spacer(modifier = Modifier.weight(0.8f))

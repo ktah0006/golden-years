@@ -48,6 +48,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.focus.focusProperties
 import com.example.golden_years.ui.theme.VerySoftCoral
@@ -57,92 +58,101 @@ fun AddEntry() {
     var systolicBloodPressure by remember { mutableStateOf("") }
     var diastolicBloodPressure by remember { mutableStateOf("") }
     var glucose by remember { mutableStateOf("") }
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "logo image",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
 
-        Text("New Record",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background
+    ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxWidth(0.7f),
-            horizontalAlignment = Alignment.Start
+            modifier = Modifier.fillMaxSize()
+                        .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
-
-            // date picker
-            DisplayDatePicker()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text("Blood Pressure",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
-        )
-            OutlinedTextField(
-                value = systolicBloodPressure,
-                onValueChange = { systolicBloodPressure = it },
-                label = { Text("Systolic BP") }
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "logo image",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
             )
-
-            OutlinedTextField(
-                value = diastolicBloodPressure,
-                onValueChange = { diastolicBloodPressure = it },
-                label = { Text("Diastolic BP") }
-            )
-
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text("Glucose",
-                style = MaterialTheme.typography.headlineSmall,
+            Text(
+                "New Record",
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
-            OutlinedTextField(
-                value = glucose,
-                onValueChange = { glucose = it },
-                label = { Text("Glucose") }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                horizontalAlignment = Alignment.Start
+            ) {
+
+                // date picker
+                DisplayDatePicker()
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    "Blood Pressure",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                OutlinedTextField(
+                    value = systolicBloodPressure,
+                    onValueChange = { systolicBloodPressure = it },
+                    label = { Text("Systolic BP") }
+                )
+
+                OutlinedTextField(
+                    value = diastolicBloodPressure,
+                    onValueChange = { diastolicBloodPressure = it },
+                    label = { Text("Diastolic BP") }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    "Glucose",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                OutlinedTextField(
+                    value = glucose,
+                    onValueChange = { glucose = it },
+                    label = { Text("Glucose") }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            DropDown()
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                horizontalArrangement = Arrangement.Center
             )
-        }
+            {
+                Button(
+                    onClick = {},
+                ) {
+                    Text("+ Add")
+                }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        DropDown()
-        Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(0.7f),
-            horizontalArrangement = Arrangement.Center
-        )
-        {
-            Button (
-            onClick = {},
-            ) {
-                Text("+ Add")
+                OutlinedButton(
+                    onClick = {},
+                ) {
+                    Text("cancel")
+                }
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            OutlinedButton (
-                onClick = {},
-            ) {
-                Text("cancel")
-            }
         }
-
     }
 }
 
@@ -222,9 +232,7 @@ fun DisplayDatePicker(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDown(){
-    val states = listOf("before meal",
-         "<2 hours after meal",
-        ">2 hours after meal")
+    val states = listOf("Before Meal", "After Meal")
     var isExpanded by remember { mutableStateOf(false) }
     var selectedMeal = remember { mutableStateOf(states[0])}
     Column(
