@@ -26,11 +26,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    authenticationViewModel: AuthenticationViewModel= viewModel()
+) {
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
@@ -38,8 +43,7 @@ fun LoginScreen() {
     Column(
         modifier = Modifier.fillMaxSize()
             .padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -52,20 +56,35 @@ fun LoginScreen() {
 
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = {
+                email = it
+                error = null },
             label = { Text("email") }
         )
 
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
-            label = { Text("password") }
+            onValueChange = {
+                password = it
+                error = null},
+            label = { Text("password") },
+            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = {},
+            onClick = {
+
+                authenticationViewModel.signIn(
+                    email = email,
+                    password = password,
+                    error = { message ->
+                        error = message
+                    },
+                )
+
+            },
             modifier = Modifier.fillMaxWidth(0.7f)
         ) {
             Text("Sign in")
@@ -80,6 +99,17 @@ fun LoginScreen() {
             Text("Create Account")
         }
 
+        error?.let {
+            Spacer(modifier = Modifier
+                .height(12.dp)
+                .fillMaxWidth(0.7f)
+            )
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
         Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = "forgot password",
@@ -87,6 +117,11 @@ fun LoginScreen() {
             color = MaterialTheme.colorScheme.primary,
             textDecoration = TextDecoration.Underline
         )
+
+        // NOTE TO SELF: remove this later
+        val user = authenticationViewModel.currentUser
+        Text(text = "User ID: ${user?.uid ?: "Not logged in"}")
+        Text(text = "Email: ${user?.email ?: "none"}")
     }
         }
 

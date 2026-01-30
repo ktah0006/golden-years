@@ -64,7 +64,6 @@ fun ForgotPasswordVerification() {
                 Text(
                     "we sent a code to your registered email",
                     style = MaterialTheme.typography.bodyLarge,
-//                fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSecondary
                 )
 
@@ -72,7 +71,6 @@ fun ForgotPasswordVerification() {
                 Text(
                     "enter code to reset your password",
                     style = MaterialTheme.typography.bodyMedium,
-//                fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSecondary
                 )
 

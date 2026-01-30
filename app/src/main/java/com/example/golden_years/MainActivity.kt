@@ -17,11 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,13 +43,15 @@ class MainActivity : ComponentActivity() {
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
 //                }
-//                BottomNavigationBar()
+                BottomNavigationBar()
 //                SuccessScreen()
 //                ForgotPasswordVerification()
 //                ResetPassword()
 //                LoginScreen()
+
 //                SignupScreen()
-                AddEntry()
+//                AddEntry()
+
             }
         }
     }
@@ -65,21 +69,21 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun BottomNavigationBar() {
     val navController = rememberNavController()
+    val loggedIn = com.google.firebase.auth.FirebaseAuth
+        .getInstance()
+        .currentUser != null
+
+    val authenticationViewModel: AuthenticationViewModel = viewModel()
+    val user = authenticationViewModel.currentUser
+    LaunchedEffect(user) {
+        if (user != null) {
+            navController.navigate(Destinations.HOME.route) {
+                popUpTo(Destinations.LOGIN.route) { inclusive = true }
+            }
+        }
+    }
+
     Scaffold(
-//        topBar = {
-//            TopAppBar(
-//                title = { Text(
-//                    "GoldenYears",
-//                    style = MaterialTheme.typography.titleMedium
-//                )
-//                },
-//                colors = TopAppBarDefaults.topAppBarColors(
-//                    containerColor = Color(0xFFB39DDB),
-//                    titleContentColor = Color.White, // Title text
-//                    navigationIconContentColor = Color.White, // Menu icon
-//                )
-//            )
-//        },
         bottomBar = {
             NavigationBar(
                 modifier = Modifier.padding(bottom = 20.dp),
@@ -117,13 +121,19 @@ fun BottomNavigationBar() {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-//            SHOULD DO THIS LATER
-//            startDestination = Destinations.LOGIN.route,
-            startDestination = Destinations.HOME.route,
+////            SHOULD DO THIS LATER
+////            startDestination = Destinations.LOGIN.route,
+//            startDestination = Destinations.HOME.route,
+            startDestination = if (loggedIn) {
+                Destinations.HOME.route
+            }
+            else {
+                Destinations.LOGIN.route
+            },
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Destinations.HOME.route) { HomeScreen() }
-//            composable(Destinations.LOGIN.route) { LoginScreen() }
+            composable(Destinations.LOGIN.route) { LoginScreen() }
 //            composable(Destinations.SIGNUP.route) { SignupScreen() }
 //            composable(Destinations.ADDENTRY.route) { AddEntry() }
             composable(Destinations.RECORD.route) { RecordScreen() }
