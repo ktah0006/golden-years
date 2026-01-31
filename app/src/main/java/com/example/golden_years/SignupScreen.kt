@@ -26,9 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import java.util.Date
 
 @Composable
 fun SignupScreen(
@@ -36,9 +38,35 @@ fun SignupScreen(
     authenticationViewModel: AuthenticationViewModel= viewModel()
 ) {
     var name by remember { mutableStateOf("") }
+    var selectedDob by remember { mutableStateOf<Long?>(null) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmedPassword by remember { mutableStateOf("") }
+    var signUpError by remember { mutableStateOf<String?>(null) }
+
+    fun handleSignUp(){
+        if (selectedDob == null){
+            signUpError = "Please select date of birth"
+            return
+        }
+        val dobToStore= com.google.firebase.Timestamp(Date(selectedDob!!))
+
+        if (password != confirmedPassword) {
+            signUpError = "Passwords do not match"
+            return
+        }
+
+        authenticationViewModel.signUp(
+            email = email,
+            password = password,
+            name = name,
+            dob = dobToStore,
+            error = { message ->
+                signUpError = message
+            },
+        )
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
@@ -56,7 +84,17 @@ fun SignupScreen(
                     .fillMaxWidth()
                     .height(120.dp)
             )
+
             Spacer(modifier = Modifier.height(24.dp))
+
+            signUpError?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier.fillMaxWidth(0.7f),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+            Spacer(modifier = Modifier.height(6.dp))
 
             Text(
                 "Create an Account",
@@ -79,20 +117,28 @@ fun SignupScreen(
             )
 
             DisplayDatePicker(
+                selectedDate = selectedDob,
+                onDateSelected = { selectedDob = it },
                 modifier = Modifier.fillMaxWidth(0.68f),
                 label = "DoB"
             )
 
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
-                label = { Text("password") }
+                onValueChange = {
+                    password = it
+                    signUpError = null},
+                label = { Text("password") },
+                visualTransformation = PasswordVisualTransformation()
             )
 
             OutlinedTextField(
                 value = confirmedPassword,
-                onValueChange = { confirmedPassword = it },
-                label = { Text("confirm password") }
+                onValueChange = {
+                    confirmedPassword = it
+                    signUpError = null},
+                label = { Text("confirm password")},
+                visualTransformation = PasswordVisualTransformation()
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -103,7 +149,7 @@ fun SignupScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = {},
+                onClick = { handleSignUp() },
                 modifier = Modifier.fillMaxWidth(0.7f)
             ) {
                 Text("Sign up")
@@ -122,4 +168,6 @@ fun SignupScreen(
         }
     }
 }
+
+
 

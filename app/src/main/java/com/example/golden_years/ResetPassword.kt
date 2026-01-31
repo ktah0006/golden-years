@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -63,13 +64,15 @@ fun ResetPassword() {
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("enter new password") }
+                    label = { Text("enter new password") },
+                    visualTransformation = PasswordVisualTransformation()
                 )
 
                 OutlinedTextField(
                     value = confirmedPassword,
                     onValueChange = { confirmedPassword = it },
-                    label = { Text("confirm password") }
+                    label = { Text("confirm password") },
+                    visualTransformation = PasswordVisualTransformation()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(

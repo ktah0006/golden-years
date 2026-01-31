@@ -44,6 +44,7 @@ import java.util.Locale
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -94,7 +95,7 @@ fun AddEntry(
             ) {
 
                 // date picker
-                DisplayDatePicker()
+//                DisplayDatePicker()
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -164,27 +165,23 @@ fun AddEntry(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayDatePicker(
+    selectedDate: Long?,
+    onDateSelected: (Long) -> Unit,
     modifier: Modifier = Modifier,
     label: String = "Date"
 ) {
-    val calendar = Calendar.getInstance()
-    var recordDate by remember { mutableStateOf("") }
     val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = System.currentTimeMillis()
-    )
-    var showDatePicker by remember {
-        mutableStateOf(false)
-    }
+        initialSelectedDateMillis = selectedDate ?: System.currentTimeMillis())
+    var showDatePicker by remember { mutableStateOf(false) }
+    val displayDate = selectedDate?.let { formatter.format(Date(it)) } ?: ""
 
-    var selectedDate by remember {
-        mutableStateOf(calendar.timeInMillis)
-    }
 
     Column() {
         OutlinedTextField(
-            value = recordDate,
-            onValueChange = {recordDate=it},
+            value = displayDate,
+//            onValueChange = {recordDate=it},
+            onValueChange = {},
             readOnly = true,
             label = { Text(label) },
             modifier = modifier,
@@ -207,8 +204,9 @@ fun DisplayDatePicker(
                 confirmButton = {
                     TextButton(onClick = {
                         showDatePicker = false
-                        selectedDate = datePickerState.selectedDateMillis!!
-                        recordDate = "${formatter.format(Date(selectedDate))}"
+                        datePickerState.selectedDateMillis?.let {
+                            onDateSelected(it)
+                        }
                     }) {
                         Text(text = "OK")
                     }

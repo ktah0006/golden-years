@@ -26,6 +26,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun ProfileScreen(
     authenticationViewModel: AuthenticationViewModel = viewModel()
 ) {
+    val user = authenticationViewModel.currentUser
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -57,7 +59,7 @@ fun ProfileScreen(
                 )
                 Spacer(modifier = Modifier.weight(0.01f))
                 Text(
-                    "Email: alice.smith@example.com",
+                    "Email: ${user?.email ?: "none"}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -70,6 +72,7 @@ fun ProfileScreen(
                 )
 
             Spacer(modifier = Modifier.weight(0.8f))
+            Text(text = "User ID: ${user?.uid ?: "Not logged in"}")
             OutlinedButton(
                 onClick = {
                     authenticationViewModel.signOut()

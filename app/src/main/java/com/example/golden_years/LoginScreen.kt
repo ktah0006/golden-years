@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 @Composable
 fun LoginScreen(
@@ -38,7 +39,7 @@ fun LoginScreen(
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf<String?>(null) }
+    var loginError by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
@@ -55,9 +56,9 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .height(160.dp)
         )
-        Spacer(modifier = Modifier.height(24.dp))
 
-        error?.let {
+        Spacer(modifier = Modifier.height(24.dp))
+        loginError?.let {
             Text(
                 text = it,
                 modifier = Modifier.fillMaxWidth(0.7f),
@@ -70,7 +71,7 @@ fun LoginScreen(
             value = email,
             onValueChange = {
                 email = it
-                error = null },
+                loginError = null },
             label = { Text("email") }
         )
 
@@ -78,9 +79,9 @@ fun LoginScreen(
             value = password,
             onValueChange = {
                 password = it
-                error = null},
+                loginError = null},
             label = { Text("password") },
-            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(10.dp))
         Button(
@@ -90,10 +91,9 @@ fun LoginScreen(
                     email = email,
                     password = password,
                     error = { message ->
-                        error = message
+                        loginError = message
                     },
                 )
-
             },
             modifier = Modifier.fillMaxWidth(0.7f)
         ) {
