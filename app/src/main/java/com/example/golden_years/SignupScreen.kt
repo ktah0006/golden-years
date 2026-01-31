@@ -27,9 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 @Composable
-fun SignupScreen() {
+fun SignupScreen(
+    navController: NavController,
+    authenticationViewModel: AuthenticationViewModel= viewModel()
+) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -107,7 +112,9 @@ fun SignupScreen() {
             Spacer(modifier = Modifier.height(2.dp))
 
             OutlinedButton(
-                onClick = {},
+                onClick = {
+                    navController.navigate(AuthenticationDestinations.LOGIN.route)
+                },
                 modifier = Modifier.fillMaxWidth(0.7f)
             ) {
                 Text("Already have an account?")

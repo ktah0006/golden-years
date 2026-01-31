@@ -19,9 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavController
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -62,25 +65,30 @@ fun HomeScreen() {
             Text(
                 "The weather looks good for a walk",
                 style = MaterialTheme.typography.bodyLarge,
-//                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondary
             )
             Spacer(modifier = Modifier.height(26.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    navController.navigate(OtherDestinations.ADDENTRY.route)
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("+ Add New Entry")
             }
             Button(
-                onClick = {},
+                onClick = {
+                    navController.navigate(Destinations.RECORD.route)
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("View all BP and Glucose Records")
             }
             Button(
-                onClick = {},
+                onClick = {
+                    navController.navigate(Destinations.REPORT.route)
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("View Charts")

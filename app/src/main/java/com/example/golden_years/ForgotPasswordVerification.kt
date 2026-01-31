@@ -26,9 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun ForgotPasswordVerification() {
+fun ForgotPasswordVerification(
+    navController: NavController
+) {
     var resetCode by remember { mutableStateOf("") }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
@@ -82,7 +85,9 @@ fun ForgotPasswordVerification() {
 
                 Spacer(modifier = Modifier.height(52.dp))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(OtherDestinations.RESETPASSWORD.route)
+                    },
                 ) {
                     Text("Submit")
                 }

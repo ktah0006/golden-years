@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,9 +28,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 @Composable
 fun LoginScreen(
+    navController: NavController,
     authenticationViewModel: AuthenticationViewModel= viewModel()
 ) {
 
@@ -54,6 +57,15 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(24.dp))
 
+        error?.let {
+            Text(
+                text = it,
+                modifier = Modifier.fillMaxWidth(0.7f),
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+
         OutlinedTextField(
             value = email,
             onValueChange = {
@@ -70,9 +82,7 @@ fun LoginScreen(
             label = { Text("password") },
             visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
+        Spacer(modifier = Modifier.height(10.dp))
         Button(
             onClick = {
 
@@ -91,32 +101,27 @@ fun LoginScreen(
         }
 
         Spacer(modifier = Modifier.height(2.dp))
-
         OutlinedButton(
-            onClick = {},
+            onClick = {
+                navController.navigate(AuthenticationDestinations.SIGNUP.route)
+            },
             modifier = Modifier.fillMaxWidth(0.7f)
         ) {
             Text("Create Account")
         }
 
-        error?.let {
-            Spacer(modifier = Modifier
-                .height(12.dp)
-                .fillMaxWidth(0.7f)
-            )
+
+        Spacer(modifier = Modifier.height(10.dp))
+        TextButton(
+            onClick = { navController.navigate(OtherDestinations.VERIFICATION.route) },
+        ) {
             Text(
-                text = it,
-                color = MaterialTheme.colorScheme.error
+                text = "forgot password",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline
             )
         }
-
-        Spacer(modifier = Modifier.height(5.dp))
-        Text(
-            text = "forgot password",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary,
-            textDecoration = TextDecoration.Underline
-        )
 
         // NOTE TO SELF: remove this later
         val user = authenticationViewModel.currentUser

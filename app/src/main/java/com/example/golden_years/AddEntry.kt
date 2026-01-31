@@ -51,10 +51,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.focus.focusProperties
+import androidx.navigation.NavController
 import com.example.golden_years.ui.theme.VerySoftCoral
 
 @Composable
-fun AddEntry() {
+fun AddEntry(
+    navController: NavController
+) {
     var systolicBloodPressure by remember { mutableStateOf("") }
     var diastolicBloodPressure by remember { mutableStateOf("") }
     var glucose by remember { mutableStateOf("") }
@@ -138,7 +141,9 @@ fun AddEntry() {
             )
             {
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(Destinations.RECORD.route)
+                    },
                 ) {
                     Text("+ Add")
                 }

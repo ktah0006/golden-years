@@ -43,7 +43,8 @@ class MainActivity : ComponentActivity() {
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
 //                }
-                BottomNavigationBar()
+//                BottomNavigationBar()
+                AppNavigation()
 //                SuccessScreen()
 //                ForgotPasswordVerification()
 //                ResetPassword()
@@ -65,83 +66,97 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BottomNavigationBar() {
-    val navController = rememberNavController()
-    val loggedIn = com.google.firebase.auth.FirebaseAuth
-        .getInstance()
-        .currentUser != null
-
-    val authenticationViewModel: AuthenticationViewModel = viewModel()
-    val user = authenticationViewModel.currentUser
-    LaunchedEffect(user) {
-        if (user != null) {
-            navController.navigate(Destinations.HOME.route) {
-                popUpTo(Destinations.LOGIN.route) { inclusive = true }
-            }
-        }
-    }
-
-    Scaffold(
-        bottomBar = {
-            NavigationBar(
-                modifier = Modifier.padding(bottom = 20.dp),
-                containerColor = MaterialTheme.colorScheme.surface
-            ) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-// iterate through enum values
-                Destinations.entries.forEach { destination ->
-                    NavigationBarItem(
-                        icon = { Icon(destination.icon, contentDescription =
-                            destination.label) },
-                        label = { Text(destination.label) },
-                        selected = currentDestination?.route == destination.route,
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.tertiary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurface,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        onClick = {
-                            navController.navigate(destination.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    )
-                }
-            }
-        }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-////            SHOULD DO THIS LATER
-////            startDestination = Destinations.LOGIN.route,
-//            startDestination = Destinations.HOME.route,
-            startDestination = if (loggedIn) {
-                Destinations.HOME.route
-            }
-            else {
-                Destinations.LOGIN.route
-            },
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            composable(Destinations.HOME.route) { HomeScreen() }
-            composable(Destinations.LOGIN.route) { LoginScreen() }
-//            composable(Destinations.SIGNUP.route) { SignupScreen() }
-//            composable(Destinations.ADDENTRY.route) { AddEntry() }
-            composable(Destinations.RECORD.route) { RecordScreen() }
-            composable(Destinations.REPORT.route) { ReportScreen() }
-            composable(Destinations.PROFILE.route) { ProfileScreen() }
-        }
-    }
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun BottomNavigationBar() {
+//    val navController = rememberNavController()
+////    val loggedIn = com.google.firebase.auth.FirebaseAuth
+////        .getInstance()
+////        .currentUser != null
+//
+//    val authenticationViewModel: AuthenticationViewModel = viewModel()
+//    val user = authenticationViewModel.currentUser
+//    LaunchedEffect(user) {
+//        if (user != null) {
+//            navController.navigate(Destinations.HOME.route) {
+//                popUpTo(0)
+//            }
+//        } else {
+//            navController.navigate(AuthenticationDestinations.LOGIN.route) {
+//                popUpTo(0)
+//            }
+//        }
+//    }
+//
+//    Scaffold(
+//        bottomBar = {
+//            if (user != null) {
+//                NavigationBar(
+//                    modifier = Modifier.padding(bottom = 20.dp),
+//                    containerColor = MaterialTheme.colorScheme.surface
+//                ) {
+//                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//                    val currentDestination = navBackStackEntry?.destination
+//// iterate through enum values
+//                    Destinations.entries.forEach { destination ->
+//                        NavigationBarItem(
+//                            icon = {
+//                                Icon(
+//                                    destination.icon, contentDescription =
+//                                        destination.label
+//                                )
+//                            },
+//                            label = { Text(destination.label) },
+//                            selected = currentDestination?.route == destination.route,
+//                            colors = NavigationBarItemDefaults.colors(
+//                                selectedIconColor = MaterialTheme.colorScheme.primary,
+//                                selectedTextColor = MaterialTheme.colorScheme.primary,
+//                                indicatorColor = MaterialTheme.colorScheme.tertiary,
+//                                unselectedIconColor = MaterialTheme.colorScheme.onSurface,
+//                                unselectedTextColor = MaterialTheme.colorScheme.onSurface
+//                            ),
+//                            onClick = {
+//                                navController.navigate(destination.route) {
+//                                    popUpTo(navController.graph.findStartDestination().id) {
+//                                        saveState = true
+//                                    }
+//                                    launchSingleTop = true
+//                                    restoreState = true
+//                                }
+//                            }
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    ) { paddingValues ->
+//        NavHost(
+//            navController = navController,
+//////            SHOULD DO THIS LATER
+//////            startDestination = Destinations.LOGIN.route,
+////            startDestination = Destinations.HOME.route,
+////            startDestination = if (loggedIn) {
+////                Destinations.HOME.route
+////            }
+////            else {
+////                AuthenticationDestinations.LOGIN.route
+////            },
+//            startDestination = AuthenticationDestinations.LOGIN.route,
+//            modifier = Modifier.padding(paddingValues)
+//        ) {
+//            composable(AuthenticationDestinations.LOGIN.route) { LoginScreen() }
+//            composable(AuthenticationDestinations.SIGNUP.route) { SignupScreen() }
+//            composable(Destinations.HOME.route) { HomeScreen() }
+////            composable(AuthenticationDestinations.LOGIN.route) { LoginScreen() }
+////            composable(Destinations.SIGNUP.route) { SignupScreen() }
+////            composable(Destinations.ADDENTRY.route) { AddEntry() }
+//            composable(Destinations.RECORD.route) { RecordScreen() }
+//            composable(Destinations.REPORT.route) { ReportScreen() }
+//            composable(Destinations.PROFILE.route) { ProfileScreen() }
+//         }
+//    }
+//
+//}
 
 @Preview(showBackground = true)
 @Composable
