@@ -1,10 +1,10 @@
 package com.example.golden_years
 
+import HealthRecord
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -38,30 +37,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.focus.focusProperties
 import androidx.navigation.NavController
-import com.example.golden_years.ui.theme.VerySoftCoral
+import android.util.Log
 
 @Composable
 fun AddEntry(
+    recordViewModel: RecordViewModel,
+    userId: String,
     navController: NavController
 ) {
     var systolicBloodPressure by remember { mutableStateOf("") }
     var diastolicBloodPressure by remember { mutableStateOf("") }
     var glucose by remember { mutableStateOf("") }
+    var selectedMeal by remember { mutableStateOf("Before Meal") }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
@@ -133,7 +132,10 @@ fun AddEntry(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            DropDown()
+            DropDown(
+                selectedMeal = selectedMeal,
+                onMealSelected = { selectedMeal = it }
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
@@ -143,7 +145,15 @@ fun AddEntry(
             {
                 Button(
                     onClick = {
-                        navController.navigate(Destinations.RECORD.route)
+                        handleAddEntry(
+                            recordViewModel,
+                            navController,
+                            userId,
+                            systolicBloodPressure,
+                            diastolicBloodPressure,
+                            glucose,
+                            selectedMeal,
+                        )
                     },
                 ) {
                     Text("+ Add")
@@ -152,13 +162,50 @@ fun AddEntry(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 OutlinedButton(
-                    onClick = {},
+                    onClick = {
+                        navController.popBackStack()
+                    },
                 ) {
-                    Text("cancel")
+                    Text("Cancel")
                 }
             }
 
         }
+    }
+}
+
+fun handleAddEntry(
+    recordViewModel: RecordViewModel,
+    navController: NavController,
+    userId: String,
+    systolicBloodPressure: String,
+    diastolicBloodPressure: String,
+    glucose: String,
+    selectedMeal: String,
+){
+
+    val convertedSystolic = systolicBloodPressure.toIntOrNull()
+    val convertedDiastolic = diastolicBloodPressure.toIntOrNull()
+    val convertedGlucose = glucose.toIntOrNull()
+
+    if (convertedSystolic == null
+        || convertedDiastolic == null
+        || convertedGlucose == null) {
+        return
+    }
+
+    val healthRecord = HealthRecord(
+        userId = userId,
+        bpSystolic = convertedSystolic,
+        bpDiastolic = convertedDiastolic,
+        glucose = convertedGlucose,
+        mealTiming = selectedMeal,
+        createdAt = System.currentTimeMillis()
+    )
+    Log.d("ROOM_TEST", "Inserting record: $healthRecord")
+    recordViewModel.insertRecord(healthRecord)
+    navController.navigate(Destinations.RECORD.route){
+        popUpTo(OtherDestinations.ADDENTRY.route) { inclusive = true }
     }
 }
 
@@ -234,10 +281,13 @@ fun DisplayDatePicker(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDown(){
+fun DropDown(
+    selectedMeal: String,
+    onMealSelected: (String) -> Unit
+){
     val states = listOf("Before Meal", "After Meal")
     var isExpanded by remember { mutableStateOf(false) }
-    var selectedMeal = remember { mutableStateOf(states[0])}
+//    var selectedMeal = remember { mutableStateOf(states[0])}
     Column(
         modifier = Modifier
             .fillMaxWidth(0.7f)
@@ -256,7 +306,7 @@ fun DropDown(){
                     }
                     .padding(bottom = 8.dp),
                 readOnly = true,
-                value = selectedMeal.value,
+                value = selectedMeal,
                 onValueChange = {},
                 label = { Text("Meal") },
                 trailingIcon = {
@@ -273,7 +323,7 @@ fun DropDown(){
                 onDismissRequest = { isExpanded = false },
                 modifier = Modifier
                     .background(
-                        color = MaterialTheme.colorScheme.tertiary, // SoftCoral
+                        color = MaterialTheme.colorScheme.tertiary,
                     )
             )
             {
@@ -281,7 +331,7 @@ fun DropDown(){
                     DropdownMenuItem(
                         text = { Text(selectionOption) },
                         onClick = {
-                            selectedMeal.value = selectionOption
+                            onMealSelected(selectionOption)
                             isExpanded = false},
                         contentPadding =
                             ExposedDropdownMenuDefaults.ItemContentPadding,

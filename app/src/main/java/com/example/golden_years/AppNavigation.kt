@@ -23,9 +23,10 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-
     val authenticationViewModel: AuthenticationViewModel = viewModel()
+    val recordViewModel: RecordViewModel = viewModel()
     val user = authenticationViewModel.currentUser
+
     LaunchedEffect(user) {
         if (user != null) {
             navController.navigate(Destinations.HOME.route) {
@@ -88,10 +89,19 @@ fun AppNavigation() {
             composable(AuthenticationDestinations.LOGIN.route) { LoginScreen(navController) }
             composable(AuthenticationDestinations.SIGNUP.route) { SignupScreen(navController) }
             composable(Destinations.HOME.route) { HomeScreen(navController) }
-            composable(Destinations.RECORD.route) { RecordScreen() }
+            composable(Destinations.RECORD.route) {
+                if (user != null) {
+                    RecordScreen(recordViewModel, user.uid)
+                }
+            }
             composable(Destinations.REPORT.route) { ReportScreen() }
             composable(Destinations.PROFILE.route) { ProfileScreen() }
-            composable(OtherDestinations.ADDENTRY.route) { AddEntry(navController) }
+//            composable(OtherDestinations.ADDENTRY.route) { AddEntry(recordViewModel, user.uid, navController) }
+            composable(OtherDestinations.ADDENTRY.route) {
+                if (user != null) {
+                    AddEntry(recordViewModel, user.uid, navController)
+                }
+            }
             composable(OtherDestinations.VERIFICATION.route) { ForgotPasswordVerification(navController) }
             composable(OtherDestinations.RESETPASSWORD.route) { ResetPassword() }
 

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 //    id("com.android.application")
     id("com.google.gms.google-services")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -55,6 +56,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.mpandroidchart)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.room.compiler)
 
 //    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
 //    implementation(platform(libs.firebase.bom))
