@@ -7,7 +7,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import HealthRecord
-@Database(entities = [HealthRecord::class], version = 2, exportSchema = false)
+@Database(entities = [HealthRecord::class], version = 3, exportSchema = false)
 // You will never instantiate this class yourself
 abstract class RecordDatabase : RoomDatabase() {
     abstract fun recordDAO(): RecordDAO // to use this: val dao = db.recordDAO()

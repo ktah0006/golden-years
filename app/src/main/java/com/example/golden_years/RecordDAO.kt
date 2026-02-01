@@ -10,11 +10,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecordDAO {
-//    @Query("SELECT * FROM Records")
-//    fun getAllRecords(): Flow<List<Record>>
-
     @Query("SELECT * FROM records WHERE userId = :userId ORDER BY createdAt DESC")
     fun getUserRecords(userId: String): Flow<List<HealthRecord>>
+
     @Insert
     suspend fun insertRecord(record: HealthRecord)
     @Update

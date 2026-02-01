@@ -12,5 +12,8 @@ data class HealthRecord(
     val glucose: Int,
     val mealTiming: String,
     val createdAt: Long,
-    val syncedToFirestore: Boolean = false
+
+    val firestoreSynced: Boolean = false,
+    val firestoreId: String? = null
+
 )
