@@ -60,7 +60,21 @@ fun AddEntry(
     var systolicBloodPressure by remember { mutableStateOf("") }
     var diastolicBloodPressure by remember { mutableStateOf("") }
     var glucose by remember { mutableStateOf("") }
+    var selectedDate by remember { mutableStateOf<Long>(System.currentTimeMillis()) }
+    var sysBPError by remember { mutableStateOf<String?>(null) }
+    var diasBPError by remember { mutableStateOf<String?>(null) }
+    var glucoseError by remember { mutableStateOf<String?>(null) }
     var selectedMeal by remember { mutableStateOf("Before Meal") }
+
+    // takes in the data and decides if an error should be generated
+    fun validate(field: String): String? {
+        if (field.isBlank()){
+            return "Required"
+        } else if (field.toIntOrNull() == null){
+            return "This must be a number"
+        } else
+            return null
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
@@ -78,7 +92,7 @@ fun AddEntry(
                     .fillMaxWidth()
                     .height(100.dp)
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             Text(
                 "New Record",
@@ -95,43 +109,64 @@ fun AddEntry(
 
                 // date picker
 //                DisplayDatePicker()
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    "Blood Pressure",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                DisplayDatePicker(
+                    selectedDate = selectedDate,
+                    onDateSelected = { selectedDate = it }
                 )
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+//                Text(
+//                    "Blood Pressure",
+//                    style = MaterialTheme.typography.headlineSmall,
+//                    fontWeight = FontWeight.Bold,
+//                    color = MaterialTheme.colorScheme.primary
+//                )
                 OutlinedTextField(
                     value = systolicBloodPressure,
-                    onValueChange = { systolicBloodPressure = it },
-                    label = { Text("Systolic BP") }
+                    onValueChange = {
+                        systolicBloodPressure = it
+                        sysBPError = null
+                    },
+                    label = { Text("Systolic Blood Pressure") },
+                    supportingText = { sysBPError?.let { Text(it) } },
+                    isError = (sysBPError != null)
                 )
+                Spacer(modifier = Modifier.height(6.dp))
 
                 OutlinedTextField(
                     value = diastolicBloodPressure,
-                    onValueChange = { diastolicBloodPressure = it },
-                    label = { Text("Diastolic BP") }
+                    onValueChange = {
+                        diastolicBloodPressure = it
+                        diasBPError = null
+                    },
+                    label = { Text("Diastolic Blood Pressure") },
+                    supportingText = { diasBPError?.let { Text(it) } },
+                    isError = (diasBPError != null)
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    "Glucose",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+//                Text(
+//                    "Glucose",
+//                    style = MaterialTheme.typography.headlineSmall,
+//                    fontWeight = FontWeight.Bold,
+//                    color = MaterialTheme.colorScheme.primary
+//                )
                 OutlinedTextField(
                     value = glucose,
-                    onValueChange = { glucose = it },
-                    label = { Text("Glucose") }
+                    onValueChange = {
+                        glucose = it
+                        glucoseError = null
+                    },
+                    label = { Text("Glucose") },
+                    supportingText = { glucoseError?.let { Text(it) } },
+                    isError = (glucoseError != null)
+
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             DropDown(
                 selectedMeal = selectedMeal,
                 onMealSelected = { selectedMeal = it }
@@ -145,15 +180,24 @@ fun AddEntry(
             {
                 Button(
                     onClick = {
-                        handleAddEntry(
-                            recordViewModel,
-                            navController,
-                            userId,
-                            systolicBloodPressure,
-                            diastolicBloodPressure,
-                            glucose,
-                            selectedMeal,
-                        )
+
+                        sysBPError = validate(systolicBloodPressure)
+                        diasBPError = validate(diastolicBloodPressure)
+                        glucoseError = validate(glucose)
+
+                        if (sysBPError==null && diasBPError==null && glucoseError==null){
+                            handleAddEntry(
+                                recordViewModel,
+                                navController,
+                                userId,
+                                systolicBloodPressure,
+                                diastolicBloodPressure,
+                                glucose,
+                                selectedMeal,
+                                selectedDate
+                            )
+                        }
+
                     },
                 ) {
                     Text("+ Add")
@@ -163,6 +207,9 @@ fun AddEntry(
 
                 OutlinedButton(
                     onClick = {
+                        systolicBloodPressure = ""
+                        diastolicBloodPressure = ""
+                        glucose = ""
                         navController.popBackStack()
                     },
                 ) {
@@ -182,11 +229,12 @@ fun handleAddEntry(
     diastolicBloodPressure: String,
     glucose: String,
     selectedMeal: String,
+    selectedDate: Long
 ){
-
     val convertedSystolic = systolicBloodPressure.toIntOrNull()
     val convertedDiastolic = diastolicBloodPressure.toIntOrNull()
     val convertedGlucose = glucose.toIntOrNull()
+
 
     if (convertedSystolic == null
         || convertedDiastolic == null
@@ -200,7 +248,8 @@ fun handleAddEntry(
         bpDiastolic = convertedDiastolic,
         glucose = convertedGlucose,
         mealTiming = selectedMeal,
-        createdAt = System.currentTimeMillis()
+        createdAt = selectedDate
+
     )
     Log.d("ROOM_TEST", "Inserting record: $healthRecord")
     recordViewModel.insertRecord(healthRecord)
@@ -219,7 +268,9 @@ fun DisplayDatePicker(
 ) {
     val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = selectedDate ?: System.currentTimeMillis())
+//        initialSelectedDateMillis = selectedDate ?: System.currentTimeMillis()
+        initialSelectedDateMillis = selectedDate
+    )
     var showDatePicker by remember { mutableStateOf(false) }
     val displayDate = selectedDate?.let { formatter.format(Date(it)) } ?: ""
 
