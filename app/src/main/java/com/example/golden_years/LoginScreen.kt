@@ -57,7 +57,15 @@ fun LoginScreen(
                 .height(160.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(18.dp))
+        Text(
+            "Log in to your account",
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(18.dp))
         loginError?.let {
             Text(
                 text = it,
@@ -122,11 +130,6 @@ fun LoginScreen(
                 textDecoration = TextDecoration.Underline
             )
         }
-
-        // NOTE TO SELF: remove this later
-        val user = authenticationViewModel.currentUser
-        Text(text = "User ID: ${user?.uid ?: "Not logged in"}")
-        Text(text = "Email: ${user?.email ?: "none"}")
     }
         }
 

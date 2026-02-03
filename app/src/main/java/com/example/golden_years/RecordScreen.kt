@@ -39,15 +39,6 @@ fun RecordScreen(
     recordViewModel: RecordViewModel,
     userId: String
 ) {
-    val allRecords = remember { mutableStateListOf(
-        "Date: 01/11/2025\nBP: 120/80\nGlucose: 111\nbefore meal",
-        "Date: 09/11/2025\nBP: 139/70\nGlucose: 100\nafter meal",
-        "Date: 11/11/2025\nBP: 130/90\nGlucose: 99\nafter meal",
-        "Date: 19/11/2025\nBP: 120/80\nGlucose: 111\nbefore meal",
-        "Date: 11/12/2025\nBP: 120/80\nGlucose: 111\nafter meal",
-        "Date: 01/01/2026\nBP: 139/70\nGlucose: 100\nafter meal",
-        "Date: 03/01/2026\nBP: 130/90\nGlucose: 99\nbefore meal")}
-
     val records by recordViewModel
         .getRecords(userId)
         .collectAsState(initial = emptyList())
@@ -65,7 +56,7 @@ fun RecordScreen(
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
-        Text("Records in DB: ${records.size}")
+//        Text("Records in DB: ${records.size}")
         LazyColumn (
             modifier = Modifier
                 .weight(1f)
@@ -100,9 +91,10 @@ fun RecordScreen(
                                 contentDescription = "Edit record",
                             )
                         }
-                        IconButton(onClick = {
-                            allRecords.removeAt(index)
-                        },
+                        IconButton(
+                            onClick = {
+                            recordViewModel.deleteRecord(record)
+                                },
                         ) {
                             Icon(Icons.Default.Delete,
                                 modifier = Modifier.size(24.dp),

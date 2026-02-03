@@ -107,8 +107,6 @@ fun AddEntry(
                 horizontalAlignment = Alignment.Start
             ) {
 
-                // date picker
-//                DisplayDatePicker()
                 DisplayDatePicker(
                     selectedDate = selectedDate,
                     onDateSelected = { selectedDate = it }
@@ -257,6 +255,7 @@ fun handleAddEntry(
         popUpTo(OtherDestinations.ADDENTRY.route) { inclusive = true }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

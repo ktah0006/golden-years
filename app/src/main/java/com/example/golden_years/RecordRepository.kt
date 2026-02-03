@@ -92,7 +92,27 @@ class RecordRepository(application: Application) {
     }
 
     suspend fun delete(record: HealthRecord) {
-        recordDao.deleteRecord(record)
+
+        try {
+            val recFirestoreId = record.firestoreId
+            if (recFirestoreId != null) {
+                Log.d("RecordRepository", "Firestore id is not null")
+                db.collection("users")
+                    .document(record.userId)
+                    .collection("records")
+                    .document(recFirestoreId)
+                    .delete()
+                    .await()
+
+                Log.d("RecordRepository", "Record deleted from Firestore")
+            }
+
+            recordDao.deleteRecord(record)
+            Log.d("RecordRepository", "Record deleted from Room")
+        }
+        catch (e: Exception){
+            Log.e("RecordRepository", "could not delete record", e)
+        }
     }
 
     suspend fun clearAllRecords() {

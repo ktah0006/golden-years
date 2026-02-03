@@ -21,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.text.SimpleDateFormat
@@ -42,10 +43,10 @@ fun ProfileScreen(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.7f)
+                .fillMaxWidth(0.8f)
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
 
             Spacer(modifier = Modifier.height(26.dp))
@@ -60,28 +61,48 @@ fun ProfileScreen(
             )
 
                 Text(
-                    text = "Name: ${currUserName ?: "Loading..."}",
+                    "Name",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = currUserName ?: "Loading...",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Spacer(modifier = Modifier.weight(0.01f))
+                Spacer(modifier = Modifier.weight(0.06f))
+
                 Text(
-                    "Email: ${user?.email ?: "none"}",
+                    "Email",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    user?.email ?: "none",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                Spacer(modifier = Modifier.weight(0.01f))
+            Spacer(modifier = Modifier.weight(0.06f))
+
+                Text(
+                    "Date of Birth",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
                 val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                 val displayDate = currUserDob?.toDate()?.let { formatter.format(it) } ?: "Loading..."
                 Text(
-                    "DoB: $displayDate",
+                    displayDate,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
             Spacer(modifier = Modifier.weight(0.8f))
-            Text(text = "User ID: ${user?.uid ?: "Not logged in"}")
+//            Text(text = "User ID: ${user?.uid ?: "Not logged in"}")
             OutlinedButton(
                 onClick = {
                     authenticationViewModel.signOut()
