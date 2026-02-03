@@ -52,10 +52,7 @@ class RecordRepository(application: Application) {
     }
 
     suspend fun insert(record: HealthRecord) {
-        // insert in Room
-        recordDao.insertRecord(record)
 
-        // insert in firestore
         try {
 
             val recordForFirestore = mapOf(
@@ -70,17 +67,16 @@ class RecordRepository(application: Application) {
             val recordsDocRef = db.collection("users")
                 .document(record.userId)
                 .collection("records")
-//                .add(record)
                 .add(recordForFirestore)
                 .await()
 
-            // update Health Record firestore fields after inserting in firestore
-            recordDao.updateRecord(
-                record.copy(
-                    firestoreSynced = true,
-                    firestoreId = recordsDocRef.id,
-                )
+            val recordWithFirestoreId = record.copy(
+                firestoreSynced = true,
+                firestoreId = recordsDocRef.id
             )
+
+            recordDao.insertRecord(recordWithFirestoreId)
+
 
         } catch (e: Exception){
             Log.e("RecordRepository", "Failed to sync record", e)
