@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -37,7 +38,8 @@ import java.util.Locale
 @Composable
 fun RecordScreen(
     recordViewModel: RecordViewModel,
-    userId: String
+    userId: String,
+    navController: NavController
 ) {
     val records by recordViewModel
         .getRecords(userId)
@@ -77,13 +79,16 @@ fun RecordScreen(
                     val displayDate = record.createdAt.let { formatter.format(Date(it)) }
                     Text(
                         text =
-                            "Date: $displayDate\nBP: ${record.bpSystolic}/${record.bpDiastolic}\n" +
+                            "ID:${record.recordId}\n\nDate: $displayDate\nBP: ${record.bpSystolic}/${record.bpDiastolic}\n" +
                                     "Glucose: ${record.glucose}\n" +
                                     record.mealTiming,
                         modifier = Modifier.padding(8.dp)
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)){
-                        IconButton(onClick = {},
+                        IconButton(onClick = {
+                            recordViewModel.setRecordToEdit(record)
+                            navController.navigate(OtherDestinations.EDITRECORD.route)
+                        },
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Edit,

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -21,11 +22,20 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
     fun insertRecord(record: HealthRecord) = viewModelScope.launch(Dispatchers.IO) {
         cRepository.insert(record)
     }
-    fun updateRecord(record: HealthRecord) = viewModelScope.launch(Dispatchers.IO) {
-        cRepository.update(record)
+    fun updateRecord(userId: String,record: HealthRecord) = viewModelScope.launch(Dispatchers.IO) {
+        cRepository.update(userId, record)
     }
     fun deleteRecord(record: HealthRecord) = viewModelScope.launch(Dispatchers.IO) {
         cRepository.delete(record)
+    }
+
+    val currEditingRecord = MutableStateFlow<HealthRecord?>(null)
+    fun setRecordToEdit(recordToEdit: HealthRecord) {
+        currEditingRecord.value = recordToEdit
+    }
+
+    fun clearEditingRecord() {
+        currEditingRecord.value = null
     }
 }
 

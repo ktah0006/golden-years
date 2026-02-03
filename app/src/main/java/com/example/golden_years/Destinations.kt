@@ -44,5 +44,6 @@ enum class OtherDestinations(
 ) {
     ADDENTRY("addEntry", "Add Data"),
     VERIFICATION("forgotPasswordVerification", "Verify Email"),
-    RESETPASSWORD("resetPassword", "Create New Password")
+    RESETPASSWORD("resetPassword", "Create New Password"),
+    EDITRECORD("editRecord", "Edit Existing Record")
 }

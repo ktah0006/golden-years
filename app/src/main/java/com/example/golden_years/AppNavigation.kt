@@ -91,7 +91,7 @@ fun AppNavigation() {
             composable(Destinations.HOME.route) { HomeScreen(navController) }
             composable(Destinations.RECORD.route) {
                 if (user != null) {
-                    RecordScreen(recordViewModel, user.uid)
+                    RecordScreen(recordViewModel, user.uid, navController)
                 }
             }
             composable(Destinations.REPORT.route) { ReportScreen() }
@@ -104,6 +104,11 @@ fun AppNavigation() {
             }
             composable(OtherDestinations.VERIFICATION.route) { ForgotPasswordVerification(navController) }
             composable(OtherDestinations.RESETPASSWORD.route) { ResetPassword() }
+            composable(OtherDestinations.EDITRECORD.route) {
+                if (user != null) {
+                    EditRecord(recordViewModel, user.uid, navController)
+                }
+            }
 
         }
     }

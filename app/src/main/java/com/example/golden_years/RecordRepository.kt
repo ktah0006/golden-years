@@ -87,8 +87,39 @@ class RecordRepository(application: Application) {
         }
     }
 
-    suspend fun update(record: HealthRecord) {
-        recordDao.updateRecord(record)
+    suspend fun update(
+        userId: String,
+        record: HealthRecord
+    ) {
+        try {
+            val recFirestoreId = record.firestoreId
+
+            val recordForFirestore = mapOf(
+                "userId" to record.userId,
+                "bpSystolic" to record.bpSystolic,
+                "bpDiastolic" to record.bpDiastolic,
+                "glucose" to record.glucose,
+                "mealTiming" to record.mealTiming,
+                "createdAt" to Timestamp(Date(record.createdAt))
+            )
+
+            Log.d("RecordRepository", "is firestore record null ${recFirestoreId != null}")
+            if (recFirestoreId != null) {
+                db.collection("users")
+                    .document(userId)
+                    .collection("records")
+                    .document(recFirestoreId)
+                    .update(recordForFirestore)
+                    .await()
+            }
+
+            recordDao.updateRecord(record)
+
+            Log.d("RecordRepository", "Record updated in Firestore")
+
+        } catch(e: Exception) {
+            Log.e("RecordRepository", "could not update record", e)
+        }
     }
 
     suspend fun delete(record: HealthRecord) {
