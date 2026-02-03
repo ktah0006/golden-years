@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class AuthenticationViewModel (application: Application) : AndroidViewModel(application) {
@@ -21,8 +22,30 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
     private val recordRepository = RecordRepository(application)
     var currentUser by mutableStateOf(auth.currentUser)
 
+    val currentUserName = MutableStateFlow<String?>(null)
+    val currentUserDob = MutableStateFlow<Timestamp?>(null)
+
+    private fun userProfileListener(uid: String) {
+        db.collection("users")
+            .document(uid)
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot == null) {
+                    return@addSnapshotListener
+                }
+                else {
+                    currentUserName.value = snapshot.getString("name")
+                    currentUserDob.value = snapshot.getTimestamp("dob")
+                }
+
+            }
+    }
+
     private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
         currentUser = firebaseAuth.currentUser
+
+        currentUser?.uid?.let { uid ->
+            userProfileListener(uid)
+        }
     }
 
     init {

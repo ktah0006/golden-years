@@ -17,16 +17,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun ProfileScreen(
     authenticationViewModel: AuthenticationViewModel = viewModel()
 ) {
     val user = authenticationViewModel.currentUser
+
+    val currUserName by authenticationViewModel.currentUserName.collectAsState()
+    val currUserDob by authenticationViewModel.currentUserDob.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -53,7 +60,7 @@ fun ProfileScreen(
             )
 
                 Text(
-                    "Name: Alice Smith",
+                    text = "Name: ${currUserName ?: "Loading..."}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -65,8 +72,10 @@ fun ProfileScreen(
                 )
 
                 Spacer(modifier = Modifier.weight(0.01f))
+                val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                val displayDate = currUserDob?.toDate()?.let { formatter.format(it) } ?: "Loading..."
                 Text(
-                    "DoB: 11/01/03",
+                    "DoB: $displayDate",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )

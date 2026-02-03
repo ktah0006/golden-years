@@ -14,17 +14,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    authenticationViewModel: AuthenticationViewModel = viewModel()
 ) {
+    val currUserName by authenticationViewModel.currentUserName.collectAsState()
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -48,7 +54,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(26.dp))
 
             Text(
-                "Hello, Alice!",
+                "Hello, ${currUserName ?: "Loading..."}!",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondary
