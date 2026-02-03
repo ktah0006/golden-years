@@ -19,4 +19,7 @@ interface RecordDAO {
     suspend fun updateRecord(record: HealthRecord)
     @Delete
     suspend fun deleteRecord(record: HealthRecord)
+
+    @Query("DELETE FROM records")
+    suspend fun deleteAllRecords()
 }

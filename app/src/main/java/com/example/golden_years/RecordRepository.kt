@@ -3,12 +3,12 @@ package com.example.golden_years
 import HealthRecord
 import android.app.Application
 import android.util.Log
-import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.Date
 
@@ -20,6 +20,35 @@ class RecordRepository(application: Application) {
 
     fun getRecords(userId: String): Flow<List<HealthRecord>> {
         return recordDao.getUserRecords(userId)
+    }
+
+    fun getRecordsFirestore(userId: String){
+
+        db.collection("users")
+            .document(userId)
+            .collection("records")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    for (singleRecord in snapshot.documents) {
+                        val recordToAdd = HealthRecord(
+                            userId = userId,
+                            bpSystolic = singleRecord.getLong("bpSystolic")?.toInt() ?: 0,
+                            bpDiastolic = singleRecord.getLong("bpDiastolic")?.toInt() ?: 0,
+                            glucose = singleRecord.getLong("glucose")?.toInt() ?: 0,
+                            mealTiming = singleRecord.getString("mealTiming") ?: "",
+                            createdAt = singleRecord.getTimestamp("createdAt")?.toDate()?.time ?: 0L,
+                            firestoreSynced = true,
+                            firestoreId = singleRecord.id
+                        )
+                        recordDao.insertRecord(recordToAdd)
+                        Log.d("FIRESTORE_RETRIEVAL", "SUCCESS")
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("FIRESTORE_RETRIEVAL", "could not get records from firestore", e)
+            }
     }
 
     suspend fun insert(record: HealthRecord) {
@@ -64,5 +93,9 @@ class RecordRepository(application: Application) {
 
     suspend fun delete(record: HealthRecord) {
         recordDao.deleteRecord(record)
+    }
+
+    suspend fun clearAllRecords() {
+        recordDao.deleteAllRecords()
     }
 }
