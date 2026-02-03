@@ -30,6 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun RecordScreen(
@@ -78,14 +81,12 @@ fun RecordScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-//                    Text(
-//                        text = allRecords[index],
-//                        modifier = Modifier
-//                            .padding(8.dp)
-//                    )
+
+                    val formatter = SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault())
+                    val displayDate = record.createdAt.let { formatter.format(Date(it)) }
                     Text(
                         text =
-                            "BP: ${record.bpSystolic}/${record.bpDiastolic}\n" +
+                            "Date: $displayDate\nBP: ${record.bpSystolic}/${record.bpDiastolic}\n" +
                                     "Glucose: ${record.glucose}\n" +
                                     record.mealTiming,
                         modifier = Modifier.padding(8.dp)
