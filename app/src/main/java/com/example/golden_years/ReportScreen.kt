@@ -1,5 +1,6 @@
 package com.example.golden_years
 
+import HealthRecord
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,19 +30,37 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
-fun ReportScreen() {
+fun ReportScreen(
+    recordViewModel: RecordViewModel,
+    userId: String
+) {
+
+    val recentRecords by recordViewModel
+        .getRecentRecords(userId)
+        .collectAsState(initial = emptyList())
+
+    val reversed = recentRecords.sortedBy { it.createdAt }
+
     var selectedMode by remember { mutableStateOf("BP Chart") }
     val modes = listOf("BP Chart", "Glucose Chart")
+
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Weekly Health Report",
+        Spacer(
+            modifier = Modifier
+                .height(18.dp))
+        Text("Health Report",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
+
         Spacer(modifier = Modifier.height(20.dp))
+
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             modes.forEach { mode ->
                 FilterChip(
@@ -61,32 +81,29 @@ fun ReportScreen() {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
+
         when (selectedMode) {
-            "BP Chart" -> BPChart()
-            "Glucose Chart" -> GlucoseChart()
+            "BP Chart" -> BPChart(reversed)
+            "Glucose Chart" -> GlucoseChart(reversed)
         }
+
     }
 }
 @Composable
-fun BPChart() {
-    val systolicBP = listOf(
-        BarEntry(0f, 120f),
-        BarEntry(1f, 139f),
-        BarEntry(2f, 130f),
-        BarEntry(3f, 120f),
-        BarEntry(4f, 120f),
-        BarEntry(5f, 139f),
-        BarEntry(5f, 130f)
-    )
-    val diastolicBP = listOf(
-        BarEntry(0f, 80f),
-        BarEntry(1f, 70f),
-        BarEntry(2f, 90f),
-        BarEntry(3f, 80f),
-        BarEntry(4f, 80f),
-        BarEntry(5f, 70f),
-        BarEntry(5f, 90f)
-    )
+fun BPChart(recordsForChart: List<HealthRecord>) {
+
+    if (recordsForChart.isEmpty()) {
+        Text("No data to present")
+        return
+    }
+
+    val systolicBP = recordsForChart.mapIndexed { index, singleRecord ->
+        BarEntry(index.toFloat(), singleRecord.bpSystolic.toFloat())
+    }
+
+    val diastolicBP = recordsForChart.mapIndexed { index, singleRecord ->
+        BarEntry(index.toFloat(), singleRecord.bpDiastolic.toFloat())
+    }
 
 //    val barDataSet = BarDataSet(systolicBP, "Blood Pressure")
     val systolicSet = BarDataSet(systolicBP, "Systolic (mmHg)").apply {
@@ -104,6 +121,11 @@ fun BPChart() {
     val barSpace = 0.05f
     barData.barWidth = 0.35f
 
+    val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
+    val xAxisLabels = recordsForChart.map {
+        formatter.format(Date(it.createdAt))
+    }
+
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = { context ->
@@ -112,19 +134,14 @@ fun BPChart() {
                 description.isEnabled = false
                 setFitBars(true)
                 xAxis.position = XAxis.XAxisPosition.BOTTOM
-                xAxis.valueFormatter = IndexAxisValueFormatter(
-                    listOf(
-                        "01/11", "09/11", "11/11",
-                        "19/11", "11/12", "01/01", "03/01"
-                    )
-                )
+                xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
+                xAxis.granularity = 1f
 
                 axisLeft.axisMinimum = 0f
                 axisRight.isEnabled = false
                 // to group the bars
                 xAxis.axisMinimum = 0f
-                xAxis.axisMaximum =
-                    0f + barData.getGroupWidth(groupSpace, barSpace) * systolicBP.size
+                xAxis.axisMaximum = barData.getGroupWidth(groupSpace, barSpace) * recordsForChart.size
 
                 groupBars(0f, groupSpace, barSpace)
 
@@ -136,24 +153,31 @@ fun BPChart() {
 }
 
 @Composable
-fun GlucoseChart() {
-    val glucoseEntries = listOf(
-        BarEntry(0f, 111f),
-        BarEntry(1f, 100f),
-        BarEntry(2f, 99f),
-        BarEntry(3f, 111f),
-        BarEntry(4f, 111f),
-        BarEntry(5f, 100f),
-        BarEntry(6f, 99f)
-    )
+fun GlucoseChart(recordsForChart: List<HealthRecord>) {
+
+    if (recordsForChart.isEmpty()) {
+        Text("No data to present")
+        return
+    }
+
+    val glucoseEntries = recordsForChart.mapIndexed { index, singleRecord ->
+        BarEntry(index.toFloat(), singleRecord.glucose.toFloat())
+    }
+
     val barDataSet = BarDataSet(glucoseEntries, "Glucose").apply {
         color = MaterialTheme.colorScheme.primary.toArgb()
     }
-//    barDataSet.colors = ColorTemplate.PASTEL_COLORS.toList()
+
+
     val barData = BarData(barDataSet)
 
     // to group the bars
     barData.barWidth = 0.5f
+
+    val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
+    val xAxisLabels = recordsForChart.map {
+        formatter.format(Date(it.createdAt))
+    }
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),
@@ -163,12 +187,7 @@ fun GlucoseChart() {
                 description.isEnabled = false
                 setFitBars(true)
                 xAxis.position = XAxis.XAxisPosition.BOTTOM
-                xAxis.valueFormatter = IndexAxisValueFormatter(
-                    listOf(
-                        "01/11", "09/11", "11/11",
-                        "19/11", "11/12", "01/01", "03/01"
-                    )
-                )
+                xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
 
                 axisLeft.axisMinimum = 0f
                 axisRight.isEnabled = false

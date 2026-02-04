@@ -21,13 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -50,18 +45,16 @@ fun RecordScreen(
         .padding(16.dp)
     ) {
 
-        Spacer(
-            modifier = Modifier
-                .height(32.dp))
-        Text(
-            text ="All Records:",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
+        Spacer(modifier = Modifier.height(18.dp))
+
+        Text("All Records",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
         )
-//        Text("Records in DB: ${records.size}")
-        LazyColumn (
-            modifier = Modifier
-                .weight(1f)
+        Spacer(modifier = Modifier.height(6.dp))
+
+        LazyColumn (modifier = Modifier.weight(1f)
         ) {
             items(
                 records.size,
@@ -79,7 +72,8 @@ fun RecordScreen(
                     val displayDate = record.createdAt.let { formatter.format(Date(it)) }
                     Text(
                         text =
-                            "ID:${record.recordId}\n\nDate: $displayDate\nBP: ${record.bpSystolic}/${record.bpDiastolic}\n" +
+                            "Date: $displayDate\n" +
+                                    "BP: ${record.bpSystolic}/${record.bpDiastolic}\n" +
                                     "Glucose: ${record.glucose}\n" +
                                     record.mealTiming,
                         modifier = Modifier.padding(8.dp)
@@ -112,7 +106,7 @@ fun RecordScreen(
                 HorizontalDivider(
                     modifier = Modifier.fillMaxWidth(),
                     thickness = 1.dp,
-                    color = Color.LightGray
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }

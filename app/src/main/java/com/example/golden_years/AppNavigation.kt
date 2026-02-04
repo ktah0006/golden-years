@@ -94,7 +94,11 @@ fun AppNavigation() {
                     RecordScreen(recordViewModel, user.uid, navController)
                 }
             }
-            composable(Destinations.REPORT.route) { ReportScreen() }
+            composable(Destinations.REPORT.route) {
+                if (user != null) {
+                    ReportScreen(recordViewModel, user.uid)
+                }
+            }
             composable(Destinations.PROFILE.route) { ProfileScreen() }
 //            composable(OtherDestinations.ADDENTRY.route) { AddEntry(recordViewModel, user.uid, navController) }
             composable(OtherDestinations.ADDENTRY.route) {

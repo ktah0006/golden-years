@@ -37,5 +37,10 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
     fun clearEditingRecord() {
         currEditingRecord.value = null
     }
+
+
+    fun getRecentRecords(userId: String): Flow<List<HealthRecord>> {
+        return cRepository.getRecentRecords(userId)
+    }
 }
 

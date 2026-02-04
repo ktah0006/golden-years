@@ -22,4 +22,7 @@ interface RecordDAO {
 
     @Query("DELETE FROM records")
     suspend fun deleteAllRecords()
+
+    @Query("SELECT * FROM records WHERE userId = :userId ORDER BY createdAt DESC LIMIT 6")
+    fun getRecentRecords(userId: String): Flow<List<HealthRecord>>
 }

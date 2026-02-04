@@ -145,4 +145,8 @@ class RecordRepository(application: Application) {
     suspend fun clearAllRecords() {
         recordDao.deleteAllRecords()
     }
+
+    fun getRecentRecords(userId: String): Flow<List<HealthRecord>> {
+        return recordDao.getRecentRecords(userId)
+    }
 }
