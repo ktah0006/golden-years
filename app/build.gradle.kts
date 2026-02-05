@@ -78,15 +78,6 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.room.compiler)
 
-//    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
-//    implementation(platform(libs.firebase.bom))
-//    implementation(libs.firebase.auth.ktx)
-//    implementation(libs.firebase.firestore.ktx)
-
-    // WORKS
-//    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
-//    implementation("com.google.firebase:firebase-auth")
-
     // WORKS TOO
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
@@ -98,6 +89,7 @@ dependencies {
     implementation(libs.gson)
 
     implementation(libs.play.services.location)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.golden_years.weather.WeatherViewModel
@@ -65,20 +66,6 @@ fun HomeScreen(
                 color = MaterialTheme.colorScheme.onSecondary
             )
 
-            // add weather logic
-//            Image(
-//                painter = painterResource(id = R.drawable.w),
-//                contentDescription = "temporary weather image",
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(100.dp)
-//            )
-//            Text(
-//                "The weather looks good for a walk",
-//                style = MaterialTheme.typography.bodyLarge,
-//                color = MaterialTheme.colorScheme.onSecondary
-//            )
-
             val weather = weatherViewModel.weather
             val currContext = LocalContext.current
 
@@ -99,12 +86,18 @@ fun HomeScreen(
             if (weather == null) {
                 Text("Loading...")
             } else {
-                Text("Temp: ${weather.main.temp}°C")
-                Text("Conditions: ${weather.weather.first().description}")
-                Text("City: ${weather.name}")
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    "It's ${weather.main.temp}°C in ${weather.name} " +
+                    "current condition: ${weather.weather.first().description}",
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    style = MaterialTheme.typography.bodyLarge,
+                    lineHeight = 30.sp
+
+                )
             }
 
-            Spacer(modifier = Modifier.height(26.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
