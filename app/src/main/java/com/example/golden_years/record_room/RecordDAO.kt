@@ -1,6 +1,6 @@
-package com.example.golden_years
+package com.example.golden_years.record_room
 
-import HealthRecord
+import com.example.golden_years.record_room.HealthRecord
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert

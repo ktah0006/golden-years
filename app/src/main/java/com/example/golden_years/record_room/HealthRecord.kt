@@ -1,3 +1,5 @@
+package com.example.golden_years.record_room
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

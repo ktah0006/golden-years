@@ -1,5 +1,7 @@
 package com.example.golden_years
-import android.widget.Button
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,23 +13,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.golden_years.weather.WeatherViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
-    authenticationViewModel: AuthenticationViewModel = viewModel()
+    authenticationViewModel: AuthenticationViewModel = viewModel(),
+    weatherViewModel: WeatherViewModel = viewModel()
 ) {
     val currUserName by authenticationViewModel.currentUserName.collectAsState()
 
@@ -61,18 +66,44 @@ fun HomeScreen(
             )
 
             // add weather logic
-            Image(
-                painter = painterResource(id = R.drawable.w),
-                contentDescription = "temporary weather image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-            )
-            Text(
-                "The weather looks good for a walk",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSecondary
-            )
+//            Image(
+//                painter = painterResource(id = R.drawable.w),
+//                contentDescription = "temporary weather image",
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(100.dp)
+//            )
+//            Text(
+//                "The weather looks good for a walk",
+//                style = MaterialTheme.typography.bodyLarge,
+//                color = MaterialTheme.colorScheme.onSecondary
+//            )
+
+            val weather = weatherViewModel.weather
+            val currContext = LocalContext.current
+
+            val permissionRequest = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.RequestPermission()
+                ) { granted ->
+                    if (granted) {
+                        weatherViewModel.getWeather(currContext)
+                    } else {
+                        Log.e("WEATHER", "Location permission denied")
+                    }
+                }
+
+            LaunchedEffect(Unit) {
+                permissionRequest.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+
+            if (weather == null) {
+                Text("Loading...")
+            } else {
+                Text("Temp: ${weather.main.temp}°C")
+                Text("Conditions: ${weather.weather.first().description}")
+                Text("City: ${weather.name}")
+            }
+
             Spacer(modifier = Modifier.height(26.dp))
 
             Button(

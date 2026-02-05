@@ -19,12 +19,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.golden_years.weather.WeatherViewModel
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
     val authenticationViewModel: AuthenticationViewModel = viewModel()
     val recordViewModel: RecordViewModel = viewModel()
+    val weatherViewModel: WeatherViewModel = viewModel()
     val user = authenticationViewModel.currentUser
 
     LaunchedEffect(user) {
@@ -88,7 +90,7 @@ fun AppNavigation() {
         ) {
             composable(AuthenticationDestinations.LOGIN.route) { LoginScreen(navController) }
             composable(AuthenticationDestinations.SIGNUP.route) { SignupScreen(navController) }
-            composable(Destinations.HOME.route) { HomeScreen(navController) }
+            composable(Destinations.HOME.route) { HomeScreen(navController, authenticationViewModel, weatherViewModel) }
             composable(Destinations.RECORD.route) {
                 if (user != null) {
                     RecordScreen(recordViewModel, user.uid, navController)

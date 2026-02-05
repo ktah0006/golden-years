@@ -1,6 +1,6 @@
 package com.example.golden_years
 
-import HealthRecord
+import com.example.golden_years.record_room.HealthRecord
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

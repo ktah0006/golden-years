@@ -1,6 +1,6 @@
-package com.example.golden_years
+package com.example.golden_years.record_room
 
-import HealthRecord
+import com.example.golden_years.record_room.HealthRecord
 import android.app.Application
 import android.util.Log
 import com.google.firebase.Timestamp

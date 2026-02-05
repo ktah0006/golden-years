@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,14 @@ plugins {
     id("com.google.gms.google-services")
     alias(libs.plugins.ksp)
 }
+
+
+val localPropertiesFile = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
+val openWeatherApiKey: String =
+    localPropertiesFile.getProperty("OPEN_WEATHER_API_KEY")
+        ?: error("OPEN_WEATHER_API_KEY is not found")
 
 android {
     namespace = "com.example.golden_years"
@@ -21,6 +31,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "OPEN_WEATHER_API_KEY",
+            "\"$openWeatherApiKey\""
+        )
+
     }
 
     buildTypes {
@@ -41,6 +58,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -73,6 +91,13 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+
+    // for retrofit
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation(libs.gson)
+
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,6 +1,6 @@
 package com.example.golden_years
 
-import HealthRecord
+import com.example.golden_years.record_room.HealthRecord
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

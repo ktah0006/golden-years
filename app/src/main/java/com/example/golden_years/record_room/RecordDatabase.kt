@@ -1,4 +1,4 @@
-package com.example.golden_years
+package com.example.golden_years.record_room
 
 // Taken and adapted from Week 5 Lab
 // Creates and provides a single instance of your Room database for the whole app
@@ -6,7 +6,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import HealthRecord
+import com.example.golden_years.record_room.HealthRecord
 @Database(entities = [HealthRecord::class], version = 3, exportSchema = false)
 // You will never instantiate this class yourself
 abstract class RecordDatabase : RoomDatabase() {
