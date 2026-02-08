@@ -30,6 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun LoginScreen(
@@ -40,6 +46,7 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginError by remember { mutableStateOf<String?>(null) }
+    var isPasswordVisible by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
@@ -89,8 +96,28 @@ fun LoginScreen(
                 password = it
                 loginError = null},
             label = { Text("password") },
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation =
+                if (isPasswordVisible){
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+            trailingIcon = {
+                IconButton(
+                    onClick = {isPasswordVisible = !isPasswordVisible}
+                ) {
+                    Icon(
+                        imageVector = if (isPasswordVisible)
+                            Icons.Filled.Visibility
+                        else
+                            Icons.Filled.VisibilityOff,
+                        contentDescription = "show/hide password"
+                    )
+
+                }
+            }
         )
+
         Spacer(modifier = Modifier.height(10.dp))
         Button(
             onClick = {
