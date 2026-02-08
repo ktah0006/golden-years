@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -26,13 +27,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ForgotPasswordVerification(
-    navController: NavController
+    navController: NavController,
+    authenticationViewModel: AuthenticationViewModel= viewModel()
 ) {
-    var resetCode by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var resetError by remember { mutableStateOf<String?>(null) }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
@@ -64,33 +71,59 @@ fun ForgotPasswordVerification(
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
+
                 Text(
-                    "we sent a code to your registered email",
+                    "Enter your email address",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSecondary
                 )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(32.dp))
-                Text(
-                    "enter code to reset your password",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSecondary
-                )
-
+                resetError?.let {
+                    Text(
+                        text = it,
+                        modifier = Modifier.fillMaxWidth(0.7f),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
                 OutlinedTextField(
-                    value = resetCode,
-                    onValueChange = { resetCode = it },
-                    label = { Text("XXXX-XXXX") }
+                    value = email,
+                    onValueChange = { email = it
+                        resetError = null},
+                    label = { Text("email") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    "Instructions to reset your password will be sent to this email",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    modifier = Modifier.fillMaxWidth(0.7f)
                 )
 
+
+                val context = LocalContext.current
                 Spacer(modifier = Modifier.height(52.dp))
                 Button(
                     onClick = {
-                        navController.navigate(OtherDestinations.RESETPASSWORD.route)
+                        authenticationViewModel.resetPassword(
+                            email = email,
+                            onSuccess = {
+                                navController.navigate(AuthenticationDestinations.LOGIN.route)
+                                Toast.makeText(
+                                    context,
+                                    "email sent",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            },
+                            error = { message ->
+                                resetError = message
+                            }
+                        )
                     },
                 ) {
-                    Text("Submit")
+                    Text("send reset email")
                 }
+
             }
         }
     }

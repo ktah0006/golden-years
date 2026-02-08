@@ -1,6 +1,7 @@
 package com.example.golden_years
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class AuthenticationViewModel (application: Application) : AndroidViewModel(application) {
-
 
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
@@ -121,5 +121,25 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
                     error(e.message ?: "failed to create an account. please try again.")
                 }
         }
+
+    fun resetPassword(
+        email: String,
+        onSuccess: () -> Unit,
+        error: (String) -> Unit
+    ) {
+        if (email.isBlank()) {
+            error("please enter your email")
+            return
+        }
+
+        auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                onSuccess()
+                Log.d("RESET", "email sent to: $email")
+            }
+            .addOnFailureListener { e ->
+                error(e.message ?: "could not send email")
+            }
+    }
 
     }
