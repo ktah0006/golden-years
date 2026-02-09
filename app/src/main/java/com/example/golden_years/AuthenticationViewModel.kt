@@ -14,6 +14,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 class AuthenticationViewModel (application: Application) : AndroidViewModel(application) {
 
@@ -77,7 +80,12 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
                 }
             }
             .addOnFailureListener { e ->
-                error(e.message ?: "failed to login. please try again.")
+//                error(e.message ?: "failed to login. please try again.")
+                    if (e is FirebaseAuthInvalidCredentialsException) {
+                    error("Incorrect email and/or password.")
+                } else {
+                    error("Failed to login. please try again.")
+                }
             }
     }
         fun signOut() {
@@ -118,7 +126,16 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
                         }
                 }
                 .addOnFailureListener { e ->
-                    error(e.message ?: "failed to create an account. please try again.")
+//                    error(e.message ?: "failed to create an account. please try again.")
+                    if (e is FirebaseAuthUserCollisionException){
+                        error("An account with this email already exists.")
+                    } else if (e is FirebaseAuthWeakPasswordException) {
+                        error("Password cannot be shorter than 6 characters.")
+                    } else if (e is FirebaseAuthInvalidCredentialsException) {
+                        error("Invalid email address.")
+                    } else {
+                        error("Failed to create an account. please try again.")
+                    }
                 }
         }
 
@@ -141,5 +158,4 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
                 error(e.message ?: "could not send email")
             }
     }
-
-    }
+}

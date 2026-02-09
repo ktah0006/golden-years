@@ -92,15 +92,6 @@ fun SignupScreen(
                     .height(120.dp)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            signUpError?.let {
-                Text(
-                    text = it,
-                    modifier = Modifier.fillMaxWidth(0.7f),
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
@@ -108,6 +99,14 @@ fun SignupScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )
+            Spacer(modifier = Modifier.height(24.dp))
+            signUpError?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier.fillMaxWidth(0.7f),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -185,13 +184,8 @@ fun SignupScreen(
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "must contain at least 8 characters",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = { handleSignUp() },
