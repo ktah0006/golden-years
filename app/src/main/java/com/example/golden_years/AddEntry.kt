@@ -126,7 +126,7 @@ fun AddEntry(
                         systolicBloodPressure = it
                         sysBPError = null
                     },
-                    label = { Text("Systolic Blood Pressure") },
+                    label = { Text("Systolic Blood Pressure *") },
                     supportingText = { sysBPError?.let { Text(it) } },
                     isError = (sysBPError != null)
                 )
@@ -138,7 +138,7 @@ fun AddEntry(
                         diastolicBloodPressure = it
                         diasBPError = null
                     },
-                    label = { Text("Diastolic Blood Pressure") },
+                    label = { Text("Diastolic Blood Pressure *") },
                     supportingText = { diasBPError?.let { Text(it) } },
                     isError = (diasBPError != null)
                 )
@@ -157,7 +157,7 @@ fun AddEntry(
                         glucose = it
                         glucoseError = null
                     },
-                    label = { Text("Glucose") },
+                    label = { Text("Glucose *") },
                     supportingText = { glucoseError?.let { Text(it) } },
                     isError = (glucoseError != null)
 

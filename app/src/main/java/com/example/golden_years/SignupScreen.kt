@@ -113,20 +113,20 @@ fun SignupScreen(
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("name") }
-            )
-
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("email") }
+                label = { Text("name *") }
             )
 
             DisplayDatePicker(
                 selectedDate = selectedDob,
                 onDateSelected = { selectedDob = it },
                 modifier = Modifier.fillMaxWidth(0.68f),
-                label = "DoB"
+                label = "DoB *"
+            )
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("email *") }
             )
 
             OutlinedTextField(
@@ -134,7 +134,7 @@ fun SignupScreen(
                 onValueChange = {
                     password = it
                     signUpError = null},
-                label = { Text("password") },
+                label = { Text("password *") },
 //                visualTransformation = PasswordVisualTransformation()
                 visualTransformation =
                     if (isPasswordVisible){
@@ -162,7 +162,7 @@ fun SignupScreen(
                 onValueChange = {
                     confirmedPassword = it
                     signUpError = null},
-                label = { Text("confirm password")},
+                label = { Text("confirm password *")},
 //                visualTransformation = PasswordVisualTransformation()
                 visualTransformation =
                     if (isConfirmPasswordVisible){
