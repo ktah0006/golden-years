@@ -54,6 +54,7 @@ fun RecordScreen(
         )
         Spacer(modifier = Modifier.height(6.dp))
 
+        // taken and adapted from Lab Week 3
         LazyColumn (modifier = Modifier.weight(1f)
         ) {
             items(

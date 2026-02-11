@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
+// taken and adapted from Lab Week 4
 class RecordViewModel(application: Application) : AndroidViewModel(application) {
     private val cRepository: RecordRepository
     init {

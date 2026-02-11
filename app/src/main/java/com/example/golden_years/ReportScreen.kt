@@ -89,6 +89,8 @@ fun ReportScreen(
 
     }
 }
+
+// taken and adapted from Lab Week 6
 @Composable
 fun BPChart(recordsForChart: List<HealthRecord>) {
 
@@ -105,7 +107,6 @@ fun BPChart(recordsForChart: List<HealthRecord>) {
         BarEntry(index.toFloat(), singleRecord.bpDiastolic.toFloat())
     }
 
-//    val barDataSet = BarDataSet(systolicBP, "Blood Pressure")
     val systolicSet = BarDataSet(systolicBP, "Systolic (mmHg)").apply {
         color = MaterialTheme.colorScheme.primary.toArgb()
     }
@@ -113,7 +114,6 @@ fun BPChart(recordsForChart: List<HealthRecord>) {
         color = MaterialTheme.colorScheme.secondary.toArgb()
     }
 
-//    barDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
     val barData = BarData(systolicSet, diastolicSet)
 
     // to group the bars
@@ -152,6 +152,7 @@ fun BPChart(recordsForChart: List<HealthRecord>) {
     )
 }
 
+// taken and adapted from Lab Week 6
 @Composable
 fun GlucoseChart(recordsForChart: List<HealthRecord>) {
 

@@ -4,6 +4,7 @@ import com.example.golden_years.weather.models.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+// taken and adapted from Lab Week 4
 interface RetrofitInterface {
     @GET("data/2.5/weather")
     suspend fun getCurrentWeather(

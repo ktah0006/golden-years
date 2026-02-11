@@ -80,7 +80,8 @@ fun AddEntry(
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                        .fillMaxSize()
                         .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
@@ -114,12 +115,6 @@ fun AddEntry(
 
                 Spacer(modifier = Modifier.height(18.dp))
 
-//                Text(
-//                    "Blood Pressure",
-//                    style = MaterialTheme.typography.headlineSmall,
-//                    fontWeight = FontWeight.Bold,
-//                    color = MaterialTheme.colorScheme.primary
-//                )
                 OutlinedTextField(
                     value = systolicBloodPressure,
                     onValueChange = {
@@ -145,12 +140,6 @@ fun AddEntry(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-//                Text(
-//                    "Glucose",
-//                    style = MaterialTheme.typography.headlineSmall,
-//                    fontWeight = FontWeight.Bold,
-//                    color = MaterialTheme.colorScheme.primary
-//                )
                 OutlinedTextField(
                     value = glucose,
                     onValueChange = {
@@ -178,11 +167,11 @@ fun AddEntry(
             {
                 Button(
                     onClick = {
-
                         sysBPError = validate(systolicBloodPressure)
                         diasBPError = validate(diastolicBloodPressure)
                         glucoseError = validate(glucose)
 
+                        // insert entry if there is no error
                         if (sysBPError==null && diasBPError==null && glucoseError==null){
                             handleAddEntry(
                                 recordViewModel,
@@ -195,7 +184,6 @@ fun AddEntry(
                                 selectedDate
                             )
                         }
-
                     },
                 ) {
                     Text("+ Add")
@@ -219,6 +207,7 @@ fun AddEntry(
     }
 }
 
+// insert entry in firestore and room
 fun handleAddEntry(
     recordViewModel: RecordViewModel,
     navController: NavController,
@@ -232,7 +221,6 @@ fun handleAddEntry(
     val convertedSystolic = systolicBloodPressure.toIntOrNull()
     val convertedDiastolic = diastolicBloodPressure.toIntOrNull()
     val convertedGlucose = glucose.toIntOrNull()
-
 
     if (convertedSystolic == null
         || convertedDiastolic == null
@@ -256,7 +244,7 @@ fun handleAddEntry(
     }
 }
 
-
+// taken and adapted from Lab Week 3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayDatePicker(
@@ -267,7 +255,6 @@ fun DisplayDatePicker(
 ) {
     val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     val datePickerState = rememberDatePickerState(
-//        initialSelectedDateMillis = selectedDate ?: System.currentTimeMillis()
         initialSelectedDateMillis = selectedDate
     )
     var showDatePicker by remember { mutableStateOf(false) }
@@ -277,7 +264,6 @@ fun DisplayDatePicker(
     Column() {
         OutlinedTextField(
             value = displayDate,
-//            onValueChange = {recordDate=it},
             onValueChange = {},
             readOnly = true,
             label = { Text(label) },
@@ -329,6 +315,7 @@ fun DisplayDatePicker(
     }
 }
 
+// taken and adapted from Lab Week 3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDown(
@@ -337,7 +324,6 @@ fun DropDown(
 ){
     val states = listOf("Before Meal", "After Meal")
     var isExpanded by remember { mutableStateOf(false) }
-//    var selectedMeal = remember { mutableStateOf(states[0])}
     Column(
         modifier = Modifier
             .fillMaxWidth(0.7f)

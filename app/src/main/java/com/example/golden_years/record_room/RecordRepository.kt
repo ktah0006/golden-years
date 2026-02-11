@@ -1,6 +1,5 @@
 package com.example.golden_years.record_room
 
-import com.example.golden_years.record_room.HealthRecord
 import android.app.Application
 import android.util.Log
 import com.google.firebase.Timestamp
@@ -12,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.Date
 
+// taken and adapted from Lab Week 5
 class RecordRepository(application: Application) {
     private val db = FirebaseFirestore.getInstance()
 

@@ -35,7 +35,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.google.firebase.Timestamp
 import java.util.Date
+
 
 @Composable
 fun SignupScreen(
@@ -56,7 +58,7 @@ fun SignupScreen(
             signUpError = "Please select date of birth"
             return
         }
-        val dobToStore= com.google.firebase.Timestamp(Date(selectedDob!!))
+        val dobToStore = Timestamp(Date(selectedDob!!))
 
         if (password != confirmedPassword) {
             signUpError = "Passwords do not match"
@@ -135,7 +137,7 @@ fun SignupScreen(
                     password = it
                     signUpError = null},
                 label = { Text("password *") },
-//                visualTransformation = PasswordVisualTransformation()
+                // show/hide password
                 visualTransformation =
                     if (isPasswordVisible){
                         VisualTransformation.None
@@ -163,7 +165,6 @@ fun SignupScreen(
                     confirmedPassword = it
                     signUpError = null},
                 label = { Text("confirm password *")},
-//                visualTransformation = PasswordVisualTransformation()
                 visualTransformation =
                     if (isConfirmPasswordVisible){
                         VisualTransformation.None

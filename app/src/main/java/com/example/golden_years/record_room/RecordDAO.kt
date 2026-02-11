@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+// taken and adapted from Lab Week 5
 @Dao
 interface RecordDAO {
     @Query("SELECT * FROM records WHERE userId = :userId ORDER BY createdAt DESC")

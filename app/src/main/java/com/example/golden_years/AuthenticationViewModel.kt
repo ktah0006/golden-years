@@ -28,6 +28,8 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
     val currentUserName = MutableStateFlow<String?>(null)
     val currentUserDob = MutableStateFlow<Timestamp?>(null)
 
+
+    // get user info for profile and home page
     private fun userProfileListener(uid: String) {
         db.collection("users")
             .document(uid)
@@ -50,11 +52,9 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
             userProfileListener(uid)
         }
     }
-
     init {
         auth.addAuthStateListener(authStateListener)
     }
-
     override fun onCleared() {
         auth.removeAuthStateListener(authStateListener)
         super.onCleared()
@@ -65,7 +65,6 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
         password: String,
         error: (String) -> Unit
     ) {
-
         if (email.isBlank() || password.isBlank()) {
             error("email and/or password are empty")
             return
@@ -80,7 +79,6 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
                 }
             }
             .addOnFailureListener { e ->
-//                error(e.message ?: "failed to login. please try again.")
                     if (e is FirebaseAuthInvalidCredentialsException) {
                     error("Incorrect email and/or password.")
                 } else {
@@ -88,56 +86,59 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
                 }
             }
     }
-        fun signOut() {
-            viewModelScope.launch {
-                recordRepository.clearAllRecords()
-            }
-            auth.signOut()
+
+    fun signOut() {
+        viewModelScope.launch {
+            // delete room records
+            recordRepository.clearAllRecords()
+        }
+        auth.signOut()
+    }
+
+    fun signUp(
+        email: String,
+        password: String,
+        name: String,
+        dob: Timestamp,
+        error: (String) -> Unit,
+    ) {
+        // dob is tested before sending in as a parameter
+        if (email.isBlank() || password.isBlank() || name.isBlank()) {
+            error("all fields are required")
+            return
         }
 
-        fun signUp(
-            email: String,
-            password: String,
-            name: String,
-            dob: Timestamp,
-            error: (String) -> Unit,
-        ) {
-            if (email.isBlank() || password.isBlank() || name.isBlank()) {
-                error("all fields are required")
-                return
-            }
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener { result ->
+                val uid = result.user!!.uid
 
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener { result ->
-                    val uid = result.user!!.uid
+                val newUserMap = mapOf(
+                    "name" to name,
+                    "email" to email,
+                    "dob" to dob,
+                    "createdAt" to FieldValue.serverTimestamp()
+                )
 
-                    val newUserMap = mapOf(
-                        "name" to name,
-                        "email" to email,
-                        "dob" to dob,
-                        "createdAt" to FieldValue.serverTimestamp()
-                    )
-
-                    db.collection("users")
-                        .document(uid)
-                        .set(newUserMap)
-                        .addOnFailureListener { e ->
-                            error("Account created but failed to save profile")
-                        }
-                }
-                .addOnFailureListener { e ->
-//                    error(e.message ?: "failed to create an account. please try again.")
-                    if (e is FirebaseAuthUserCollisionException){
-                        error("An account with this email already exists.")
-                    } else if (e is FirebaseAuthWeakPasswordException) {
-                        error("Password cannot be shorter than 6 characters.")
-                    } else if (e is FirebaseAuthInvalidCredentialsException) {
-                        error("Invalid email address.")
-                    } else {
-                        error("Failed to create an account. please try again.")
+                // store user info in firestore
+                db.collection("users")
+                    .document(uid)
+                    .set(newUserMap)
+                    .addOnFailureListener { e ->
+                        error("Account created but failed to save profile")
                     }
+            }
+            .addOnFailureListener { e ->
+                if (e is FirebaseAuthUserCollisionException){
+                    error("An account with this email already exists.")
+                } else if (e is FirebaseAuthWeakPasswordException) {
+                    error("Password cannot be shorter than 6 characters.")
+                } else if (e is FirebaseAuthInvalidCredentialsException) {
+                    error("Invalid email address.")
+                } else {
+                    error("Failed to create an account. please try again.")
                 }
-        }
+            }
+    }
 
     fun resetPassword(
         email: String,
@@ -151,8 +152,8 @@ class AuthenticationViewModel (application: Application) : AndroidViewModel(appl
 
         auth.sendPasswordResetEmail(email)
             .addOnSuccessListener {
+                // in compose screen this displays a toast
                 onSuccess()
-                Log.d("RESET", "email sent to: $email")
             }
             .addOnFailureListener { e ->
                 error(e.message ?: "could not send email")

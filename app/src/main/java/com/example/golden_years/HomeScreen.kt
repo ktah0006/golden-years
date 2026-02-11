@@ -66,6 +66,8 @@ fun HomeScreen(
                 color = MaterialTheme.colorScheme.onSecondary
             )
 
+
+            // location permission
             val weather = weatherViewModel.weather
             val currContext = LocalContext.current
 
@@ -83,6 +85,7 @@ fun HomeScreen(
                 permissionRequest.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
             }
 
+            // weather information from openweather api
             if (weather == null) {
                 Text("Loading...")
             } else {
@@ -99,6 +102,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // main navigation
             Button(
                 onClick = {
                     navController.navigate(OtherDestinations.ADDENTRY.route)

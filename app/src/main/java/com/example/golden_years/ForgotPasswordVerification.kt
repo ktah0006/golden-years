@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import android.widget.Toast
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
@@ -120,8 +121,20 @@ fun ForgotPasswordVerification(
                             }
                         )
                     },
+                    modifier = Modifier.fillMaxWidth(0.5f)
                 ) {
                     Text("send reset email")
+                }
+
+                Spacer(modifier = Modifier.height(3.dp))
+
+                OutlinedButton(
+                    onClick = {
+                        navController.navigate(AuthenticationDestinations.LOGIN.route)
+                    },
+                    modifier = Modifier.fillMaxWidth(0.5f)
+                ) {
+                    Text("Back")
                 }
 
             }

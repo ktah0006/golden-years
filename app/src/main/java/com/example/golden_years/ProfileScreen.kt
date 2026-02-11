@@ -93,6 +93,8 @@ fun ProfileScreen(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
+
+                // taken from Lab Week 3
                 val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                 val displayDate = currUserDob?.toDate()?.let { formatter.format(it) } ?: "Loading..."
                 Text(
@@ -102,7 +104,6 @@ fun ProfileScreen(
                 )
 
             Spacer(modifier = Modifier.weight(0.8f))
-//            Text(text = "User ID: ${user?.uid ?: "Not logged in"}")
             OutlinedButton(
                 onClick = {
                     authenticationViewModel.signOut()

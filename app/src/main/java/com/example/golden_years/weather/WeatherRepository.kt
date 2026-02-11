@@ -3,7 +3,7 @@ package com.example.golden_years.weather
 import com.example.golden_years.BuildConfig
 import com.example.golden_years.weather.models.WeatherResponse
 
-
+// taken and adapted from Lab Week 4
 class WeatherRepository {
     private val api = RetrofitObject.retrofitService
 

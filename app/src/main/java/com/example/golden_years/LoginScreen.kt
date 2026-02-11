@@ -1,8 +1,6 @@
 package com.example.golden_years
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -96,6 +94,7 @@ fun LoginScreen(
                 password = it
                 loginError = null},
             label = { Text("password") },
+            // show/hide password
             visualTransformation =
                 if (isPasswordVisible){
                     VisualTransformation.None
@@ -135,6 +134,7 @@ fun LoginScreen(
             Text("Sign in")
         }
 
+        // sign up
         Spacer(modifier = Modifier.height(2.dp))
         OutlinedButton(
             onClick = {
@@ -146,6 +146,7 @@ fun LoginScreen(
         }
 
 
+        // forgot password
         Spacer(modifier = Modifier.height(10.dp))
         TextButton(
             onClick = { navController.navigate(OtherDestinations.VERIFICATION.route) },

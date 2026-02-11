@@ -30,17 +30,21 @@ fun AppNavigation() {
     val user = authenticationViewModel.currentUser
 
     LaunchedEffect(user) {
+
+        // if logged in, first screen is home screen
         if (user != null) {
             navController.navigate(Destinations.HOME.route) {
                 popUpTo(0)
             }
         } else {
+            // if not logged in, first screen is login screen
             navController.navigate(AuthenticationDestinations.LOGIN.route) {
                 popUpTo(0)
             }
         }
     }
 
+    // taken and adapted from Lab Week 4
     Scaffold(
         bottomBar = {
             if (user != null) {
@@ -50,7 +54,6 @@ fun AppNavigation() {
                 ) {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentDestination = navBackStackEntry?.destination
-// iterate through enum values
                     Destinations.entries.forEach { destination ->
                         NavigationBarItem(
                             icon = {
@@ -88,9 +91,14 @@ fun AppNavigation() {
             startDestination = AuthenticationDestinations.LOGIN.route,
             modifier = Modifier.padding(paddingValues)
         ) {
+            composable(Destinations.PROFILE.route) { ProfileScreen() }
             composable(AuthenticationDestinations.LOGIN.route) { LoginScreen(navController) }
             composable(AuthenticationDestinations.SIGNUP.route) { SignupScreen(navController) }
-            composable(Destinations.HOME.route) { HomeScreen(navController, authenticationViewModel, weatherViewModel) }
+            composable(OtherDestinations.VERIFICATION.route) { ForgotPasswordVerification(navController) }
+            composable(Destinations.HOME.route) { HomeScreen(
+                navController,
+                authenticationViewModel,
+                weatherViewModel) }
             composable(Destinations.RECORD.route) {
                 if (user != null) {
                     RecordScreen(recordViewModel, user.uid, navController)
@@ -101,21 +109,16 @@ fun AppNavigation() {
                     ReportScreen(recordViewModel, user.uid)
                 }
             }
-            composable(Destinations.PROFILE.route) { ProfileScreen() }
-//            composable(OtherDestinations.ADDENTRY.route) { AddEntry(recordViewModel, user.uid, navController) }
             composable(OtherDestinations.ADDENTRY.route) {
                 if (user != null) {
                     AddEntry(recordViewModel, user.uid, navController)
                 }
             }
-            composable(OtherDestinations.VERIFICATION.route) { ForgotPasswordVerification(navController) }
-            composable(OtherDestinations.RESETPASSWORD.route) { ResetPassword() }
             composable(OtherDestinations.EDITRECORD.route) {
                 if (user != null) {
                     EditRecord(recordViewModel, user.uid, navController)
                 }
             }
-
         }
     }
 }

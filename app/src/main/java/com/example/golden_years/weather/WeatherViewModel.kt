@@ -12,6 +12,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.launch
 
+// taken and adapted from Lab Week 4
 class WeatherViewModel : ViewModel() {
 
     var weather by mutableStateOf<WeatherResponse?>(null)
