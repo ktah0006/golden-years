@@ -1,5 +1,6 @@
 package com.example.golden_years
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -91,9 +93,16 @@ fun RecordScreen(
                                 contentDescription = "Edit record",
                             )
                         }
+
+                        val context = LocalContext.current
                         IconButton(
                             onClick = {
                             recordViewModel.deleteRecord(record)
+                                Toast.makeText(
+                                    context,
+                                    "record deleted",
+                                    Toast.LENGTH_LONG
+                                ).show()
                                 },
                         ) {
                             Icon(Icons.Default.Delete,
